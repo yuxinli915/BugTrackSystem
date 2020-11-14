@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -16,10 +17,25 @@ namespace BugTrackSystem.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public virtual ICollection<Ticket> Tickets { get; set; }
+        public virtual ICollection<TicketDetail> Attachments { get; set; }
+        public virtual ICollection<TicketDetail> Comments { get; set; }
+        public virtual ICollection<TicketDetail> Histories { get; set; }
+        public ApplicationUser()
+        {
+            Tickets = new HashSet<Ticket>();
+            Attachments = new HashSet<TicketDetail>();
+            Comments = new HashSet<TicketDetail>();
+            Histories = new HashSet<TicketDetail>();
+        }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Project> Projects { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
