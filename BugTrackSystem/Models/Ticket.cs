@@ -9,9 +9,9 @@ namespace BugTrackSystem.Models
     public class Ticket : SystemItem
     {
         public string OwnerId { get; set; }
-        public virtual ApplicationUser Owner { get; set; }
+        public Submitter Owner { get; set; }
         public string AssignedUserId { get; set; }
-        public ApplicationUser AssignedUser { get; set; }
+        public Developer AssignedUser { get; set; }
         public int ProjectId { get; set; }
         public Project Project { get; set; }
         public DateTime Created { get; set; }
@@ -25,11 +25,14 @@ namespace BugTrackSystem.Models
         public virtual ICollection<TicketAttachment> Attachments { get; set; }
         public virtual ICollection<TicketComment> Comments { get; set; }
         public virtual ICollection<TicketHistory> Histories { get; set; }
+        public virtual ICollection<TicketNotificaiton> Notificaitons { get; set; }
+
         public Ticket()
         {
             Attachments = new HashSet<TicketAttachment>();
             Comments = new HashSet<TicketComment>();
             Histories = new HashSet<TicketHistory>();
+            Notificaitons = new HashSet<TicketNotificaiton>();
         }
 
     }

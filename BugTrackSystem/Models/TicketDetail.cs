@@ -34,8 +34,10 @@ namespace BugTrackSystem.Models
         public string FileUrl { get; set; }
     }
 
-    public class TicketNotificaiton : TicketComment
+    public class TicketNotificaiton : TicketDetail
     {
-
+        public new string UserId { get; set; }
+        public new Developer User { get; set; }
+        public string Body { get; set; }
     }
 }

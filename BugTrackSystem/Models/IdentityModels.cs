@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,20 +20,39 @@ namespace BugTrackSystem.Models
             return userIdentity;
         }
 
-        public virtual ICollection<Ticket> Tickets { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
 
         public virtual ICollection<TicketAttachment> Attachments { get; set; }
         public virtual ICollection<TicketComment> Comments { get; set; }
         public virtual ICollection<TicketHistory> Histories { get; set; }
+
         public ApplicationUser()
         {
-            Tickets = new HashSet<Ticket>();
             Attachments = new HashSet<TicketAttachment>();
             Comments = new HashSet<TicketComment>();
             Histories = new HashSet<TicketHistory>();
             Projects = new HashSet<Project>();
+        }
+    }
 
+    public class Submitter : ApplicationUser
+    {
+        public virtual ICollection<Ticket> Tickets { get; set; }
+        public Submitter()
+        {
+            Tickets = new HashSet<Ticket>();
+        }
+    }
+
+    public class Developer : ApplicationUser
+    {
+        public virtual ICollection<TicketNotificaiton> Notificaitons { get; set; }
+
+        public virtual ICollection<Ticket> Tickets { get; set; }
+        public Developer()
+        {
+            Notificaitons = new HashSet<TicketNotificaiton>();
+            Tickets = new HashSet<Ticket>();
         }
     }
 
