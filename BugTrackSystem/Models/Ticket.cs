@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using static BugTrackSystem.Models.TicketColumn;
 
 namespace BugTrackSystem.Models
 {
-    public class Ticket: SystemItem
+    public class Ticket : SystemItem
     {
+        public string OwnerId { get; set; }
+        public virtual ApplicationUser Owner { get; set; }
         public string AssignedUserId { get; set; }
         public ApplicationUser AssignedUser { get; set; }
         public int ProjectId { get; set; }

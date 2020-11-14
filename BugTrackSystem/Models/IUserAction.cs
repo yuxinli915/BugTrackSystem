@@ -8,10 +8,8 @@ namespace BugTrackSystem.Models
 {
     interface IUserAction
     {
-        void CreateItem();
+        void CreateItem(Type T, string userId);
         void EditItem();
-        void AssignUser();
         void ViewItem();
-
     }
 }

@@ -7,14 +7,18 @@ namespace BugTrackSystem.Models
 {
     public class UserHelper : IUserAction
     {
-        public void AssignUser()
-        {
-            throw new NotImplementedException();
-        }
 
-        public void CreateItem()
+        public void CreateItem(Type T, string userId)
         {
-            throw new NotImplementedException();
+            if(T == typeof(Ticket))
+            {
+                var ticket = (Ticket)Convert.ChangeType(T, typeof(Ticket));
+                
+            }
+            if(T == typeof(Project))
+            {
+                var project = (Project)Convert.ChangeType(T, typeof(Project));
+            }
         }
 
         public void EditItem()
