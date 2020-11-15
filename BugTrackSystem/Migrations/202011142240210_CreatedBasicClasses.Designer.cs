@@ -7,13 +7,13 @@ namespace BugTrackSystem.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Initial : IMigrationMetadata
+    public sealed partial class CreatedBasicClasses : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CreatedBasicClasses));
         
         string IMigrationMetadata.Id
         {
-            get { return "202011140303021_Initial"; }
+            get { return "202011142240210_CreatedBasicClasses"; }
         }
         
         string IMigrationMetadata.Source

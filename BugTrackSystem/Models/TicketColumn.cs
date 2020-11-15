@@ -11,5 +11,15 @@ namespace BugTrackSystem.Models
         {
             Tickets = new HashSet<Ticket>();
         }
+
+        public class TicketStatus : TicketColumn
+        {
+        }
+        public class TicketType : TicketColumn
+        {
+        }
+        public class TicketProperty : TicketColumn
+        {
+        }
     }
 }
