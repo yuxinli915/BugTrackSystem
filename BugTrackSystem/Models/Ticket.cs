@@ -33,6 +33,7 @@ namespace BugTrackSystem.Models
             Comments = new HashSet<TicketComment>();
             Histories = new HashSet<TicketHistory>();
             Notificaitons = new HashSet<TicketNotificaiton>();
+            
         }
 
     }
