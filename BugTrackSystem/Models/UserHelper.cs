@@ -14,7 +14,12 @@ namespace BugTrackSystem.Models
             (new UserStore<ApplicationUser>(db));
         static RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>
             (new RoleStore<IdentityRole>(db));
-        
+
+        public static ApplicationUser CreateUser(string Email)
+        {
+            var user = new ApplicationUser() { UserName = Email, Email = Email };
+            return user;
+        }
         public static void CreateRole(string roleName)
         {
             if (!roleManager.RoleExists(roleName))
