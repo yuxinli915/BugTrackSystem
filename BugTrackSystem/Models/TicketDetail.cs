@@ -13,6 +13,31 @@ namespace BugTrackSystem.Models
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public DateTime Date { get; set; }
+    }
 
+    public class TicketHistory : TicketDetail
+    {
+        public string Property { get; set; }
+        public string OldValue { get; set; }
+        public string NewValue { get; set; }
+    }
+
+    public class TicketComment : TicketDetail
+    {
+        public string Body { get; set; }
+    }
+
+    public class TicketAttachment : TicketDetail
+    {
+        public string FilePath { get; set; }
+        public string Description { get; set; }
+        public string FileUrl { get; set; }
+    }
+
+    public class TicketNotificaiton : TicketDetail
+    {
+        public new string UserId { get; set; }
+        public new Developer User { get; set; }
+        public string Body { get; set; }
     }
 }

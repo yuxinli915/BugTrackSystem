@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using static BugTrackSystem.Models.TicketColumn;
 
 namespace BugTrackSystem.Models
 {
@@ -18,24 +20,52 @@ namespace BugTrackSystem.Models
             return userIdentity;
         }
 
-        public virtual ICollection<Ticket> Tickets { get; set; }
-        public virtual ICollection<TicketDetail> Attachments { get; set; }
-        public virtual ICollection<TicketDetail> Comments { get; set; }
-        public virtual ICollection<TicketDetail> Histories { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+
+        public virtual ICollection<TicketAttachment> Attachments { get; set; }
+        public virtual ICollection<TicketComment> Comments { get; set; }
+        public virtual ICollection<TicketHistory> Histories { get; set; }
+
         public ApplicationUser()
         {
+            Attachments = new HashSet<TicketAttachment>();
+            Comments = new HashSet<TicketComment>();
+            Histories = new HashSet<TicketHistory>();
+            Projects = new HashSet<Project>();
+        }
+    }
+
+    public class Submitter : ApplicationUser
+    {
+        public virtual ICollection<Ticket> Tickets { get; set; }
+        public Submitter()
+        {
             Tickets = new HashSet<Ticket>();
-            Attachments = new HashSet<TicketDetail>();
-            Comments = new HashSet<TicketDetail>();
-            Histories = new HashSet<TicketDetail>();
+        }
+    }
+
+    public class Developer : ApplicationUser
+    {
+        public virtual ICollection<TicketNotificaiton> Notificaitons { get; set; }
+
+        public virtual ICollection<Ticket> Tickets { get; set; }
+        public Developer()
+        {
+            Notificaitons = new HashSet<TicketNotificaiton>();
+            Tickets = new HashSet<Ticket>();
         }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Admin> Admins { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<TicketAttachment> Attachments { get; set; }
+        public DbSet<TicketComment> Comments { get; set; }
+        public DbSet<TicketHistory> Histories { get; set; }
+        public DbSet<TicketType> Types { get; set; }
+        public DbSet<TicketProperty> Properties { get; set; }
+        public DbSet<TicketStatus> Statuses { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
