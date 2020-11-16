@@ -187,6 +187,7 @@
     <Compile Include="Models\SystemItem.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketDetail.cs" />
+    <Compile Include="Models\UserHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
