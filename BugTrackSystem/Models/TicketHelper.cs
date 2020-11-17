@@ -9,10 +9,6 @@ namespace BugTrackSystem.Models
     public  static class TicketHelper
     {
        static  ApplicationDbContext db = new ApplicationDbContext();
-        //public TicketHelper()
-        //{
-        //    db = new ApplicationDbContext();
-        //}
 
         public static bool DeleteCommentFromTcket(int id)
         {
