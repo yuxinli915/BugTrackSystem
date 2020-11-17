@@ -11,6 +11,7 @@ namespace BugTrackSystem.Models
         public static void CreateTicket(ApplicationDbContext db, Ticket ticket)
         {
             db.Tickets.Add(ticket);
+            db.SaveChanges();
         }
 
         public static void EditTicketDetail(ApplicationDbContext db, Ticket EditedTicket, string userId)
