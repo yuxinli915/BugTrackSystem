@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 
 namespace BugTrackSystem.Models
@@ -130,6 +131,58 @@ namespace BugTrackSystem.Models
                 tickts = tickts.Where(i => i.Updated == filters.ByUpdatedDate).AsQueryable();
             }
             return tickts.ToList();
+        }
+
+        public static void CreateTicket(ApplicationDbContext database, Ticket ticket)
+        {
+            database.Tickets.Add(ticket);
+            database.SaveChanges();
+        }
+
+        public static void EditTicketDetail(ApplicationDbContext database, Ticket EditedTicket, string userId)
+        {
+            var ticket = database.Tickets.Find(EditedTicket.Id);
+            ticket.Updated = DateTime.Now;
+            PropertyInfo[] fi = ticket.GetType().GetProperties();
+            foreach (var field in fi)
+            {
+                if (field.GetValue(ticket).Equals(field.GetValue(EditedTicket)) &&
+                    (field.Name == "Title" || field.Name == "Description" || field.Name == "TicketStatus" || field.Name == "TicketType" || field.Name == "TicketProperty"))
+                {
+                    database.Histories.Add(
+                        new TicketHistory
+                        {
+                            TicketId = ticket.Id,
+                            UserId = userId,
+                            Date = DateTime.Now,
+                            Property = field.Name,
+                            OldValue = (string)field.GetValue(ticket, null),
+                            NewValue = (string)field.GetValue(EditedTicket, null)
+                        });
+
+                    field.SetValue(ticket, field.GetValue(EditedTicket));
+                }
+            }
+            database.SaveChanges();
+        }
+
+        public static void AssignUserToTicket(ApplicationDbContext database, int ticketId, string userId)
+        {
+            database.Tickets.Find(ticketId).AssignedUserId = userId;
+            database.SaveChanges();
+        }
+
+        public static void RemoveUserToTicket(ApplicationDbContext database, int ticketId)
+        {
+            database.Tickets.Find(ticketId).AssignedUserId = null;
+            database.Tickets.Find(ticketId).AssignedUser = null;
+            database.SaveChanges();
+        }
+
+        public static void AddCommentToTicket(ApplicationDbContext database, TicketComment comment)
+        {
+            database.Comments.Add(comment);
+            database.SaveChanges();
         }
     }
 }
