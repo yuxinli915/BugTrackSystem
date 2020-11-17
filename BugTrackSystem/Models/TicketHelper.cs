@@ -5,15 +5,15 @@ using System.Web;
 
 namespace BugTrackSystem.Models
 {
-    public class TicketHelper
+    public  static class TicketHelper
     {
-        ApplicationDbContext db;
-       public TicketHelper()
-        {
-            db = new ApplicationDbContext();
-        }
+       static  ApplicationDbContext db = new ApplicationDbContext();
+        //public TicketHelper()
+        //{
+        //    db = new ApplicationDbContext();
+        //}
 
-        public bool DeleteCommentFromTcket(int id)
+        public static bool DeleteCommentFromTcket(int id)
         {
             var comment=db.Comments.Where(i => i.Id == id).FirstOrDefault();
             if (comment!=null)
@@ -24,7 +24,7 @@ namespace BugTrackSystem.Models
             }
             return false;
         }
-        public bool AddAttchmentToTcket(int id,TicketAttachment attachment)
+        public static bool AddAttchmentToTcket(int id,TicketAttachment attachment)
         {       
             if (attachment != null)
             {
@@ -35,7 +35,7 @@ namespace BugTrackSystem.Models
             }
             return false;
         }
-        public bool DeleteAttchmentFormTcket(int id, int ticketId)
+        public static bool DeleteAttchmentFormTcket(int id, int ticketId)
         {
             var attchment = db.Attachments.Where(j => j.Id == id && j.TicketId == ticketId).FirstOrDefault();
             if (attchment != null)
@@ -47,16 +47,16 @@ namespace BugTrackSystem.Models
             return false;
         }
 
-        public IEnumerable<Ticket> GetAllTicketsForUser()
+        public static IEnumerable<Ticket> GetAllTicketsForUser()
         {
             return db.Tickets.ToList();
         }
-        public IEnumerable<Ticket> GetAllTicketsForProject(int projectId)
+        public static IEnumerable<Ticket> GetAllTicketsForProject(int projectId)
         {
             return db.Tickets.Where(i=>i.ProjectId==projectId).ToList();
         }
 
-        public IEnumerable<Ticket> FilterTickets(TicketFilter filters)
+        public static IEnumerable<Ticket> FilterTickets(TicketFilter filters)
         {
             var tickts = db.Tickets.AsQueryable();
             if (!string.IsNullOrEmpty(filters.Status))
@@ -94,7 +94,7 @@ namespace BugTrackSystem.Models
             return  tickts.ToList();
         }
 
-        public IEnumerable<Ticket> SearchTicketsByKeyword(TicketFilter filters)
+        public static IEnumerable<Ticket> SearchTicketsByKeyword(TicketFilter filters)
         {
             var tickts = db.Tickets.AsQueryable();
             if (!string.IsNullOrEmpty(filters.Status))
