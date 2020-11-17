@@ -395,6 +395,18 @@ namespace BugTrackSystem.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize (Roles = "Admin")]
+
+        public ActionResult ModifyUserRole(string userId)
+        {
+            return RedirectToAction("ModifyUserRole", "Account");
+        }
+
+        public ActionResult AddUserToRole(string userId, string Role)
+        {
+            return View();
+        }
+
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
