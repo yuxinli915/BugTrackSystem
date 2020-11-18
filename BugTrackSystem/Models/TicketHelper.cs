@@ -44,9 +44,14 @@ namespace BugTrackSystem.Models
             return false;
         }
 
-        public static IEnumerable<Ticket> GetAllTicketsForUser()
+        public static IEnumerable<Ticket> GetAllTicketsForUser(string id)
+        {           
+            return db.Tickets.Where(i => i.AssignedUserId == id).ToList();
+        }
+        public static IEnumerable<Ticket> GetAllTicketsForSumitter(string id)
         {
-            return db.Tickets.ToList();
+
+            return db.Tickets.Where(i => i.OwnerId == id).ToList();
         }
         public static IEnumerable<Ticket> GetAllTicketsForProject(int projectId)
         {
