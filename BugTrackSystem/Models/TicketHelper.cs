@@ -6,14 +6,14 @@ using System.Web;
 
 namespace BugTrackSystem.Models
 {
-    public  static class TicketHelper
+    public static class TicketHelper
     {
-       static  ApplicationDbContext db = new ApplicationDbContext();
+        static ApplicationDbContext db = new ApplicationDbContext();
 
         public static bool DeleteCommentFromTcket(int id)
         {
-            var comment=db.Comments.Where(i => i.Id == id).FirstOrDefault();
-            if (comment!=null)
+            var comment = db.Comments.Where(i => i.Id == id).FirstOrDefault();
+            if (comment != null)
             {
                 db.Comments.Remove(comment);
                 db.SaveChanges();
@@ -21,8 +21,8 @@ namespace BugTrackSystem.Models
             }
             return false;
         }
-        public static bool AddAttchmentToTcket(int id,TicketAttachment attachment)
-        {       
+        public static bool AddAttchmentToTcket(int id, TicketAttachment attachment)
+        {
             if (attachment != null)
             {
                 attachment.TicketId = id;
@@ -45,7 +45,7 @@ namespace BugTrackSystem.Models
         }
 
         public static IEnumerable<Ticket> GetAllTicketsForUser(string id)
-        {           
+        {
             return db.Tickets.Where(i => i.AssignedUserId == id).ToList();
         }
         public static IEnumerable<Ticket> GetAllTicketsForSumitter(string id)
@@ -55,7 +55,7 @@ namespace BugTrackSystem.Models
         }
         public static IEnumerable<Ticket> GetAllTicketsForProject(int projectId)
         {
-            return db.Tickets.Where(i=>i.ProjectId==projectId).ToList();
+            return db.Tickets.Where(i => i.ProjectId == projectId).ToList();
         }
 
         public static IEnumerable<Ticket> FilterTickets(TicketFilter filters)
@@ -85,7 +85,7 @@ namespace BugTrackSystem.Models
             {
                 tickts = tickts.Where(i => i.AssignedUser.UserName == filters.Submitter).AsQueryable();
             }
-            if (filters.ByCreatedDate!=null)
+            if (filters.ByCreatedDate != null)
             {
                 tickts = tickts.Where(i => i.Created == filters.ByCreatedDate).AsQueryable();
             }
@@ -93,7 +93,7 @@ namespace BugTrackSystem.Models
             {
                 tickts = tickts.Where(i => i.Updated == filters.ByUpdatedDate).AsQueryable();
             }
-            return  tickts.ToList();
+            return tickts.ToList();
         }
 
         public static IEnumerable<Ticket> SearchTicketsByKeyword(TicketFilter filters)

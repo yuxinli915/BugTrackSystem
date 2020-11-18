@@ -162,9 +162,10 @@ namespace BugTrackSystem.Controllers
                 {
                     var ticket = db.Tickets.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
                     TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
-                }else if(User.IsInRole("Manager"))
+                }
+                else if (User.IsInRole("Manager"))
                 {
-                    var projects=ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
+                    var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
                     var task = projects.Where(i => i.Tickets.Where(j => j.Id == attchment.TicketId).Any()).FirstOrDefault();
                     if (task != null)
                     {
@@ -173,23 +174,25 @@ namespace BugTrackSystem.Controllers
                     }
                 }
                 else if (User.IsInRole("Developer"))
-                { 
-                    var task =TicketHelper.GetAllTicketsForUser(User.Identity.GetUserId());
+                {
+                    var task = TicketHelper.GetAllTicketsForUser(User.Identity.GetUserId());
                     if (task != null)
                     {
-                       var ticket=task.Where(i=>i.Id== attchment.TicketId).FirstOrDefault();
-                        if (ticket!=null)
+                        var ticket = task.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
+                        if (ticket != null)
                         {
                             TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
                         }
 
                     }
-                }else if(User.IsInRole("Submitter")){
-                    var task =TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
+                }
+                else if (User.IsInRole("Submitter"))
+                {
+                    var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
                     if (task != null)
                     {
-                       var ticket=task.Where(i=>i.Id== attchment.TicketId).FirstOrDefault();
-                        if (ticket!=null)
+                        var ticket = task.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
+                        if (ticket != null)
                         {
                             TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
                         }
@@ -230,7 +233,7 @@ namespace BugTrackSystem.Controllers
                 }
                 else if (User.IsInRole("Developer"))
                 {
-                    var task = db.Comments.Where(i => i.Id==comment.Id && i.UserId == User.Identity.GetUserId()).FirstOrDefault();
+                    var task = db.Comments.Where(i => i.Id == comment.Id && i.UserId == User.Identity.GetUserId()).FirstOrDefault();
                     if (task != null)
                     {
                         TicketHelper.DeleteCommentFromTcket(task.Id);
@@ -291,7 +294,7 @@ namespace BugTrackSystem.Controllers
                     var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
                     if (task != null)
                     {
-                        var attch = task.Where(i => i.Id == attchment.TicketId && i.Attachments.Where(j=>j.Id== attchment.Id).Any()).FirstOrDefault();
+                        var attch = task.Where(i => i.Id == attchment.TicketId && i.Attachments.Where(j => j.Id == attchment.Id).Any()).FirstOrDefault();
                         if (attch != null)
                         {
                             TicketHelper.DeleteAttchmentFormTcket(attch.Id, attchment.TicketId);
@@ -299,7 +302,7 @@ namespace BugTrackSystem.Controllers
                     }
                 }
 
-                TicketHelper.DeleteAttchmentFormTcket(attchment.Id,attchment.TicketId);
+                TicketHelper.DeleteAttchmentFormTcket(attchment.Id, attchment.TicketId);
                 return RedirectToAction("Index", "Manage");
             }
             return View(attchment);
