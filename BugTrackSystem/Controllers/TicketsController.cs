@@ -34,6 +34,10 @@ namespace BugTrackSystem.Controllers
         public ActionResult EditTicketDetail(int id)
         {
             var ticket = db.Tickets.Find(id);
+            ViewBag.TicketStatusId = new SelectList(db.Statuses, "Id", "Name");
+            ViewBag.TicketTypeId = new SelectList(db.Types, "Id", "Name");
+            ViewBag.TicketPropertyId = new SelectList(db.Properties, "Id", "Name");
+
             return View(ticket);
         }
 
@@ -46,6 +50,9 @@ namespace BugTrackSystem.Controllers
                 TicketHelper.EditTicketDetail(db, editedTicket, User.Identity.GetUserId());
                 return RedirectToAction("Index", "Manage");
             }
+            ViewBag.TicketStatusId = new SelectList(db.Statuses, "Id", "Name");
+            ViewBag.TicketTypeId = new SelectList(db.Types, "Id", "Name");
+            ViewBag.TicketPropertyId = new SelectList(db.Properties, "Id", "Name");
             return View(editedTicket);
         }
 
@@ -53,7 +60,7 @@ namespace BugTrackSystem.Controllers
         public ActionResult AssignUserToTicket(int id)
         {
             var ticket = db.Tickets.Find(id);
-            ViewBag.SubmitterId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "1")), "Id", "Name"); // Need to get developer role id.
+            ViewBag.SubmitterId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "3")), "Id", "Name"); // Need to get developer role id.
             return View();
         }
 
@@ -66,7 +73,7 @@ namespace BugTrackSystem.Controllers
                 TicketHelper.AssignUserToTicket(db, id, userId);
                 return RedirectToAction("Index", "Manage");
             }
-            ViewBag.userId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "1")), "Id", "Name");
+            ViewBag.userId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "3")), "Id", "Name");
             return View();
         }
 
@@ -77,7 +84,6 @@ namespace BugTrackSystem.Controllers
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        [HttpPost]
         public ActionResult RemoveUserFromTicket(int id)
         {
             if (ModelState.IsValid)
