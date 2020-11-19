@@ -37,15 +37,15 @@ namespace BugTrackSystem.Models
             if (db.Projects.Any(p => p.Id == id) && !db.Projects.Any(p => p.Title == title))
             {
                 var project = db.Projects.Find(id);
-                project.Title = title;                
+                project.Title = title;
                 return true;
             }
             return false;
         }
 
-        public static List<Project> GetAllProjectsForUser(string UserId)
+        public static List<Project> GetAllProjectsForUser(string id)
         {
-            return db.Users.Find(UserId).Projects.ToList();
+            return db.Users.Find(id).Projects.ToList();
         }
 
         public static List<Project> GetProjectDetailByProjectId(int? PId)
