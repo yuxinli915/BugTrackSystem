@@ -1,0 +1,158 @@
+﻿@model BugTrackSystem.Models.Ticket
+@{
+    ViewBag.Title = "Detail";
+}
+
+<h2>Detail</h2>
+
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            Submitter
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Owner.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            Create date
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+
+        @if (Model.Updated != null)
+        {
+            <dt>
+                Updated date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Updated)
+            </dd>
+        }
+
+        <dt>
+            Status
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketStatus.Name)
+        </dd>
+
+        <dt>
+            Type
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketType.Name)
+        </dd>
+
+        <dt>
+            Property
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketProperty.Name)
+        </dd>
+
+        <dt>
+            Assigned developer
+        </dt>
+
+        @if (ViewBag.RoleId == "1" || ViewBag.RoleId == "2")
+        {
+            if (Model.AssignedUserId == null)
+            {
+                <dd>
+                    @Html.ActionLink("Assign developer", "AssignUserToTicket", "Tickets", new { id = Model.Id }, null)
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    @Html.DisplayFor(model => model.AssignedUser.Email) @Html.ActionLink("Remove developer", "RemoveUserFromTicket", "Tickets", new { id = Model.Id }, null)
+                </dd>
+            }
+        }
+        else if (ViewBag.RoleId == "3")
+        {
+            <dd>
+                You are assigned to this ticket.
+            </dd>
+        }
+        else if (ViewBag.RoleId == "4")
+        {
+            if (Model.AssignedUserId == null)
+            {
+                <dd>
+                    No one is assigned to this ticket yet.
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    @Html.DisplayFor(model => model.AssignedUser.Email)
+                </dd>
+            }
+        }
+
+        <dt>
+            Attachments
+        </dt>
+
+        <dd>
+            @if (Model.Attachments != null)
+            {
+                foreach (var item in Model.Attachments)
+                {
+                    <div>Add date: @item.Date</div>
+                    <div>Description: @item.Description</div>
+                    <div>File path: @item.FilePath</div>
+                    <div>File url: @item.FileUrl</div>
+                    if (ViewBag.RoleId == "1" || ViewBag.RoleId == "2" || item.UserId == ViewBag.UserId)
+                    {
+                        @Html.ActionLink("Delete", "DeleteAttchmentFormTcket", new { id = item.Id })
+                    }
+                }
+            }
+            @Html.ActionLink("Add attachment", "AddAttchmentToTicket")
+        </dd>
+
+        <dt>
+            Comments
+        </dt>
+
+        <dd>
+            @if (Model.Comments != null)
+            {
+                foreach (var item in Model.Comments)
+                {
+                    <div>Add date: @item.Date</div>
+                    <div>Description: @item.Body</div>
+                    if (ViewBag.RoleId == "1" || ViewBag.RoleId == "2" || item.UserId == ViewBag.UserId)
+                    {
+                        @Html.ActionLink("Delete", "DeleteCommentFromTcket", new { id = item.Id })
+                    }
+                }
+            }
+            @Html.ActionLink("Add comment", "AddCommentToTicket")
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", "Manage")
+</div>

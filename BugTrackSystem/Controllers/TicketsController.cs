@@ -34,10 +34,6 @@ namespace BugTrackSystem.Controllers
         public ActionResult EditTicketDetail(int id)
         {
             var ticket = db.Tickets.Find(id);
-            ViewBag.TicketStatusId = new SelectList(db.Statuses, "Id", "Name");
-            ViewBag.TicketTypeId = new SelectList(db.Types, "Id", "Name");
-            ViewBag.TicketPropertyId = new SelectList(db.Properties, "Id", "Name");
-
             return View(ticket);
         }
 
@@ -50,9 +46,6 @@ namespace BugTrackSystem.Controllers
                 TicketHelper.EditTicketDetail(db, editedTicket, User.Identity.GetUserId());
                 return RedirectToAction("Index", "Manage");
             }
-            ViewBag.TicketStatusId = new SelectList(db.Statuses, "Id", "Name");
-            ViewBag.TicketTypeId = new SelectList(db.Types, "Id", "Name");
-            ViewBag.TicketPropertyId = new SelectList(db.Properties, "Id", "Name");
             return View(editedTicket);
         }
 
@@ -71,27 +64,17 @@ namespace BugTrackSystem.Controllers
             if (ModelState.IsValid)
             {
                 TicketHelper.AssignUserToTicket(db, id, userId);
-                return RedirectToAction("Index", "Manage");
+                return RedirectToAction("Detail", new { id });
             }
             ViewBag.userId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "3")), "Id", "Name");
             return View();
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult RemoveUserFromTicket()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = "Admin, Manager")]
         public ActionResult RemoveUserFromTicket(int id)
         {
-            if (ModelState.IsValid)
-            {
-                TicketHelper.RemoveUserToTicket(db, id);
-                return RedirectToAction("Index", "Manage");
-            }
-            return View();
+            TicketHelper.RemoveUserToTicket(db, id);
+            return RedirectToAction("Detail", new { id });
         }
 
         [Authorize]
@@ -106,48 +89,9 @@ namespace BugTrackSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (User.IsInRole("Admin"))
-                {
-                    TicketHelper.AddCommentToTicket(db, comment);
-                }
-                else if (User.IsInRole("Manager"))
-                {
-                    var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
-                    var task = projects.Where(i => i.Tickets.Where(j => j.Id == comment.TicketId).Any()).FirstOrDefault();
-                    if (task != null)
-                    {
-                        TicketHelper.AddCommentToTicket(db, comment);
-                    }
-                }
-                else if (User.IsInRole("Developer"))
-                {
-                    var task = TicketHelper.GetAllTicketsForUser(User.Identity.GetUserId());
-                    if (task != null)
-                    {
-                        var ticket = task.Where(i => i.Id == comment.TicketId).FirstOrDefault();
-                        if (ticket != null)
-                        {
-                            TicketHelper.AddCommentToTicket(db, comment);
-                        }
-
-                    }
-                }
-                else if (User.IsInRole("Submitter"))
-                {
-                    var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
-                    if (task != null)
-                    {
-                        var ticket = task.Where(i => i.Id == comment.TicketId).FirstOrDefault();
-                        if (ticket != null)
-                        {
-                            TicketHelper.AddCommentToTicket(db, comment);
-                        }
-
-                    }
-                }
-
-
-                return RedirectToAction("Index", "Manage");
+                comment.UserId = User.Identity.GetUserId();
+                TicketHelper.AddCommentToTicket(db, comment);
+                return RedirectToAction("Detail", new { id = comment.TicketId});
             }
             return View(comment);
         }
@@ -164,154 +108,28 @@ namespace BugTrackSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (User.IsInRole("Admin"))
-                {
-                    var ticket = db.Tickets.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
-                    TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
-                }
-                else if (User.IsInRole("Manager"))
-                {
-                    var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
-                    var task = projects.Where(i => i.Tickets.Where(j => j.Id == attchment.TicketId).Any()).FirstOrDefault();
-                    if (task != null)
-                    {
-                        var ticket = db.Tickets.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
-                        TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
-                    }
-                }
-                else if (User.IsInRole("Developer"))
-                {
-                    var task = TicketHelper.GetAllTicketsForUser(User.Identity.GetUserId());
-                    if (task != null)
-                    {
-                        var ticket = task.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
-                        if (ticket != null)
-                        {
-                            TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
-                        }
-
-                    }
-                }
-                else if (User.IsInRole("Submitter"))
-                {
-                    var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
-                    if (task != null)
-                    {
-                        var ticket = task.Where(i => i.Id == attchment.TicketId).FirstOrDefault();
-                        if (ticket != null)
-                        {
-                            TicketHelper.AddAttchmentToTcket(ticket.Id, attchment);
-                        }
-
-                    }
-                }
-                return RedirectToAction("Index", "Manage");
+                attchment.UserId = User.Identity.GetUserId();
+                TicketHelper.AddAttchmentToTcket(db, attchment);
+                return RedirectToAction("Detail", new { id = attchment.TicketId});
             }
             return View(attchment);
         }
 
-
         [Authorize]
-        public ActionResult DeleteCommentFromTcket()
+        public ActionResult DeleteCommentFromTcket(int id)
         {
-            return View();
+            var ticketId = db.Comments.Find(id).TicketId;
+            TicketHelper.DeleteCommentFromTcket(id);
+            return RedirectToAction("Detail", new { id = ticketId});
         }
 
-        [Authorize]
-        [HttpPost]
-        public ActionResult DeleteCommentFromTcket(TicketComment comment)
-        {
-            if (ModelState.IsValid)
-            {
-                if (User.IsInRole("Admin"))
-                {
-                    TicketHelper.DeleteCommentFromTcket(comment.Id);
-                }
-                else if (User.IsInRole("Manager"))
-                {
-                    var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
-                    var task = projects.Where(i => i.Tickets.Where(j => j.Id == comment.TicketId).Any()).FirstOrDefault();
-                    if (task != null)
-                    {
-                        var ticket = db.Tickets.Where(i => i.Id == comment.TicketId).FirstOrDefault();
-                        TicketHelper.DeleteCommentFromTcket(ticket.Id);
-                    }
-                }
-                else if (User.IsInRole("Developer"))
-                {
-                    var task = db.Comments.Where(i => i.Id == comment.Id && i.UserId == User.Identity.GetUserId()).FirstOrDefault();
-                    if (task != null)
-                    {
-                        TicketHelper.DeleteCommentFromTcket(task.Id);
-                    }
-                }
-                else if (User.IsInRole("Submitter"))
-                {
-                    var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
-                    if (task != null)
-                    {
-                        var ticket = task.Where(i => i.Id == comment.TicketId).FirstOrDefault();
-                        if (ticket != null)
-                        {
-                            TicketHelper.DeleteCommentFromTcket(ticket.Id);
-                        }
-
-                    }
-                }
-                return RedirectToAction("Index", "Manage");
-            }
-            return View(comment);
-        }
-        [Authorize]
-        public ActionResult DeleteAttchmentFormTcket()
-        {
-            return View();
-        }
 
         [Authorize]
-        [HttpPost]
-        public ActionResult DeleteAttchmentFormTcket(TicketAttachment attchment)
+        public ActionResult DeleteAttchmentFormTcket(int id)
         {
-            if (ModelState.IsValid)
-            {
-                if (User.IsInRole("Admin"))
-                {
-                    TicketHelper.DeleteAttchmentFormTcket(attchment.Id, attchment.TicketId);
-                }
-                else if (User.IsInRole("Manager"))
-                {
-                    var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
-                    var attch = projects.Where(i => i.Tickets.Where(j => j.Id == attchment.TicketId).Any()).FirstOrDefault();
-                    if (attch != null)
-                    {
-                        TicketHelper.DeleteAttchmentFormTcket(attch.Id, attchment.TicketId);
-                    }
-                }
-                else if (User.IsInRole("Developer"))
-                {
-                    var attch = db.Attachments.Where(i => i.Id == attchment.Id && i.UserId == User.Identity.GetUserId()).FirstOrDefault();
-                    if (attch != null)
-                    {
-                        TicketHelper.DeleteAttchmentFormTcket(attch.Id, attchment.TicketId);
-                    }
-                }
-                else if (User.IsInRole("Submitter"))
-                {
-                    var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
-                    if (task != null)
-                    {
-                        var attch = task.Where(i => i.Id == attchment.TicketId && i.Attachments.Where(j => j.Id == attchment.Id).Any()).FirstOrDefault();
-                        if (attch != null)
-                        {
-                            TicketHelper.DeleteAttchmentFormTcket(attch.Id, attchment.TicketId);
-                        }
-                    }
-                }
-
-                TicketHelper.DeleteAttchmentFormTcket(attchment.Id, attchment.TicketId);
-                return RedirectToAction("Index", "Manage");
-            }
-            return View(attchment);
+            var ticketId = db.Attachments.Find(id).TicketId;
+            TicketHelper.DeleteAttchmentFormTcket(id);
+            return RedirectToAction("Detail", new { id = ticketId});
         }
 
         [Authorize]
@@ -333,6 +151,15 @@ namespace BugTrackSystem.Controllers
         {
             var tickties = TicketHelper.FilterTickets(filters);
             return View(tickties);
+        }
+
+        [Authorize]
+        public ActionResult Detail(int id)
+        {
+            var ticket = db.Tickets.Find(id);
+            ViewBag.RoleId = db.Users.Find(User.Identity.GetUserId()).Roles.First().RoleId;
+            ViewBag.UserId = User.Identity.GetUserId();
+            return View(ticket);
         }
     }
 }

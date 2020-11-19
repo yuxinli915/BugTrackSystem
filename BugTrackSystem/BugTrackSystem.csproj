@@ -254,9 +254,9 @@
     <Content Include="Views\Tickets\CreateTicketPage.cshtml" />
     <Content Include="Views\Tickets\EditTicketDetail.cshtml" />
     <Content Include="Views\Tickets\AssignUserToTicket.cshtml" />
-    <Content Include="Views\Tickets\RemoveUserFromTicket.cshtml" />
     <Content Include="Views\Tickets\AddCommentToTicket.cshtml" />
     <Content Include="Views\Tickets\AddAttchmentToTicket.cshtml" />
+    <Content Include="Views\Tickets\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
