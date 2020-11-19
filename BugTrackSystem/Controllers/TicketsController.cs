@@ -213,30 +213,31 @@ namespace BugTrackSystem.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult DeleteCommentFromTcket(TicketComment comment)
+        public ActionResult DeleteCommentFromTcket(int commentId)
         {
             if (ModelState.IsValid)
             {
                 if (User.IsInRole("Admin"))
                 {
-                    TicketHelper.DeleteCommentFromTcket(comment.Id);
+                    TicketHelper.DeleteCommentFromTcket(commentId);
                 }
                 else if (User.IsInRole("Manager"))
                 {
                     var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
-                    var task = projects.Where(i => i.Tickets.Where(j => j.Id == comment.TicketId).Any()).FirstOrDefault();
+                    var task = projects.Where(i => i.Tickets.Where(j => j.Comments.Where(k=>k.Id==commentId).Any()).Any())
+                        .FirstOrDefault();
                     if (task != null)
                     {
-                        var ticket = db.Tickets.Where(i => i.Id == comment.TicketId).FirstOrDefault();
-                        TicketHelper.DeleteCommentFromTcket(ticket.Id);
+                        var comment = db.Comments.Where(i => i.Id == commentId).FirstOrDefault();
+                        TicketHelper.DeleteCommentFromTcket(comment.Id);
                     }
                 }
                 else if (User.IsInRole("Developer"))
                 {
-                    var task = db.Comments.Where(i => i.Id == comment.Id && i.UserId == User.Identity.GetUserId()).FirstOrDefault();
+                    var task = db.Comments.Where(i => i.Id == commentId && i.UserId == User.Identity.GetUserId()).FirstOrDefault();
                     if (task != null)
                     {
-                        TicketHelper.DeleteCommentFromTcket(task.Id);
+                        TicketHelper.DeleteCommentFromTcket(commentId);
                     }
                 }
                 else if (User.IsInRole("Submitter"))
@@ -244,17 +245,17 @@ namespace BugTrackSystem.Controllers
                     var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
                     if (task != null)
                     {
-                        var ticket = task.Where(i => i.Id == comment.TicketId).FirstOrDefault();
+                        var ticket = task.Where(i => i.Comments.Where(j=>j.Id == commentId).Any()).FirstOrDefault();
                         if (ticket != null)
                         {
-                            TicketHelper.DeleteCommentFromTcket(ticket.Id);
+                            TicketHelper.DeleteCommentFromTcket(commentId);
                         }
 
                     }
                 }
                 return RedirectToAction("Index", "Manage");
             }
-            return View(comment);
+            return View();
         }
         [Authorize]
         public ActionResult DeleteAttchmentFormTcket()
