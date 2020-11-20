@@ -60,7 +60,7 @@
                         <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
                     </tr>
                     <tr>
-                        <td>Project Manager: Insert method to find project manager here</td>
+                        <td>Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )</td>
                     </tr>
                 </table>
                 <br />
@@ -107,7 +107,7 @@ else if (User.IsInRole("Manager"))
                         <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
                     </tr>
                     <tr>
-                        <td>Project Manager: Insert method to find project manager here</td>
+                        <td>Project Manager: @project.ApplicationUsers.ToString()</td>
                     </tr>
                 </table>
                 <br />

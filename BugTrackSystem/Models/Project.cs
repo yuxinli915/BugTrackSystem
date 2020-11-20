@@ -13,5 +13,6 @@ namespace BugTrackSystem.Models
             Tickets = new HashSet<Ticket>();
             ApplicationUsers = new HashSet<ApplicationUser>();
         }
+
     }
 }
