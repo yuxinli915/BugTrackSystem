@@ -83,7 +83,7 @@ namespace BugTrackSystem.Controllers
             }
             else if (User.IsInRole("Manager"))
             {
-                model.Projects = db.Projects.ToList(); //should be filtered by projects the manager belongs to 
+                model.Projects = db.Users.Find(userId).Projects.ToList();
                 model.Tickets = db.Tickets.OrderByDescending(t => t.Created).Take(5).ToList();
             }
             else if (User.IsInRole("Developer"))

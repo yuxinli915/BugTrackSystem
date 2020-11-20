@@ -124,12 +124,7 @@ namespace BugTrackSystem.Controllers
             return RedirectToAction("Detail", new { id = ticketId});
         }
 
-                    }
-                }
-                return RedirectToAction("Index", "Manage");
-            }
-            return View(comment);
-        }
+
         [Authorize]
         public ActionResult DeleteAttchmentFormTcket()
         {
