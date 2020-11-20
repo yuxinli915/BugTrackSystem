@@ -96,8 +96,7 @@ else if (User.IsInRole("Manager"))
 
     <h3>Welcome to the Project Manager Dashboard!</h3>
 
-    <div class="container">
-        <div class="floatleft" style="width:50%">
+    <div class="block">
             <p>Current Projects: @Model.Projects.Count()</p>
 
             @foreach (var project in Model.Projects)
@@ -117,7 +116,7 @@ else if (User.IsInRole("Manager"))
 
             }
         </div>
-        <div class="floatright" style="width:25%">
+        <div class="block">
             <p>Most Recent Tickets:</p>
             @foreach (var ticket in Model.Tickets)
             {
@@ -136,7 +135,6 @@ else if (User.IsInRole("Manager"))
 
             }
         </div>
-    </div>
 }
 else
 {
