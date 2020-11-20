@@ -4,6 +4,11 @@
 }
 
 <style>
+    .block {
+        width: 50%;
+        float: left;
+        display: inline;
+    }
     table {
         border-collapse: separate;
         border: solid black 2px;
@@ -46,8 +51,7 @@
 
     <h3>Welcome to the Admin Dashboard!</h3>
 
-    <div class="container">
-        <div class="floatleft" style="width:50%">
+    <div class="block">
             <p>Current Projects: @Model.Projects.Count()</p>
 
             @foreach (var project in Model.Projects)
@@ -67,7 +71,7 @@
 
             }
         </div>
-        <div class="floatright" style="width:25%">
+        <div class="block">
             <p>Most Recent Tickets:</p>
             @foreach (var ticket in Model.Tickets)
             {
@@ -86,7 +90,6 @@
 
             }
         </div>
-    </div>
 }
 else if (User.IsInRole("Manager"))
 {
