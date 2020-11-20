@@ -185,5 +185,12 @@ namespace BugTrackSystem.Models
             database.Comments.Add(comment);
             database.SaveChanges();
         }
+
+        public static string GetUserNameFromId(ApplicationDbContext database, string userId)
+        {
+            var user = database.Users.Find(userId);
+
+            return user.UserName;
+        }
     }
 }

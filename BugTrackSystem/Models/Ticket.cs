@@ -8,6 +8,7 @@ namespace BugTrackSystem.Models
 {
     public class Ticket : SystemItem
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         public string OwnerId { get; set; }
         public Submitter Owner { get; set; }
         public string AssignedUserId { get; set; }
@@ -33,7 +34,14 @@ namespace BugTrackSystem.Models
             Comments = new HashSet<TicketComment>();
             Histories = new HashSet<TicketHistory>();
             Notificaitons = new HashSet<TicketNotificaiton>();
-            
+
+        }
+
+        public string GetAssignedUserName(string userId)
+        {
+
+            var user = db.Users.Find(userId);
+            return user.UserName;
         }
 
     }

@@ -77,5 +77,13 @@ namespace BugTrackSystem.Models
             ticketChangeNotification.UserId = userId;
             ticketChangeNotification.Body = $"Created: {DateTime.Now.ToString()} - there was a change to ticket #{ticketId}.";
         }
+
+        public static string GetUserRole()
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            var userRole = userManager.GetRoles(userId).FirstOrDefault().ToString();
+
+            return userRole;
+        }
     }
 }
