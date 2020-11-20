@@ -180,6 +180,10 @@
     <Compile Include="Migrations\202011142240210_CreatedBasicClasses.Designer.cs">
       <DependentUpon>202011142240210_CreatedBasicClasses.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011200102114_createdseedmethod.cs" />
+    <Compile Include="Migrations\202011200102114_createdseedmethod.Designer.cs">
+      <DependentUpon>202011200102114_createdseedmethod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -280,6 +284,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202011142240210_CreatedBasicClasses.resx">
       <DependentUpon>202011142240210_CreatedBasicClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011200102114_createdseedmethod.resx">
+      <DependentUpon>202011200102114_createdseedmethod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
