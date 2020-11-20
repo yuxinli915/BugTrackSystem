@@ -135,3 +135,24 @@ else if (User.IsInRole("Manager"))
         </div>
     </div>
 }
+else
+{
+    <p>Most Recent Tickets:</p>
+    foreach (var ticket in Model.Tickets)
+    {
+        <table style="width: 43%;border:groove;">
+            <tr>
+                <th>Ticket: @ticket.Title</th>
+            </tr>
+            <tr>
+                <td style="padding:15px;">@ticket.Description Ticket description goes here</td>
+            </tr>
+            <tr>
+                <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+            </tr>
+        </table>
+        <br />
+
+    }
+
+}
