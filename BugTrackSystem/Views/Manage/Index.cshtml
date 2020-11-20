@@ -73,7 +73,8 @@
                             Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )
                             @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
 
-                            @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+                            @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)   |
+                            @Html.ActionLink("Assign User", "AddUserToProject", "Projects", new { id = project.Id }, null)
                         </td>                
                     </tr>
                     

@@ -124,15 +124,28 @@ namespace BugTrackSystem.Controllers
             base.Dispose(disposing);
         }
 
+        [Authorize(Roles = "Admin, Manager")]
+        public ActionResult AddUserToProject(int projId)
+        {
+            var project = db.Projects.Find(projId);
+
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Name");
+            return View();
+        }
+
         //POST: AddUserToProject
         [Authorize(Roles = "Admin, Manager")]
         public ActionResult AddUserToProject(string userId, int projId)
         {
-            
-            var user = db.Users.Find(userId);
-            ProjectHelper.AssignUserToProject(user.Id, projId);
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.Find(userId);
+                ProjectHelper.AssignUserToProject(user.Id, projId);
+                return RedirectToAction("Index", "Manage", new { id = projId });
+            }
 
-            return RedirectToAction("Index", "Manage" ,new { id = projId });
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Name");
+            return View();
         }
 
         //POST: RemoveUserFromProject
