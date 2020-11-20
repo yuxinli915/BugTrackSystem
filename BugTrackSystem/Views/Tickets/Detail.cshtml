@@ -122,13 +122,14 @@
                     <div>Description: @item.Description</div>
                     <div>File path: @item.FilePath</div>
                     <div>File url: @item.FileUrl</div>
-                    if (ViewBag.Identity == "Admin" || ViewBag.Identity == "Manager" || item.UserId == ViewBag.UserId)
+                    <div>By @item.User.Email</div>
+                    if (ViewBag.Identity == "Admin" || (ViewBag.Identity == "Manager" && item.UserId == ViewBag.UserId) || item.UserId == ViewBag.UserId)
                     {
-                        @Html.ActionLink("Delete", "DeleteAttchmentFormTcket", new { id = item.Id })
+                        @Html.ActionLink("Edit", "EditAttchment", new { id = item.Id }, null) @Html.ActionLink("Delete", "DeleteAttchmentFormTcket", new { id = item.Id })
                     }
                 }
             }
-             | @Html.ActionLink("Add attachment", "AddAttchmentToTicket",new { id = Model.Id},null)
+            | @Html.ActionLink("Add attachment", "AddAttchmentToTicket", new { id = Model.Id }, null)
         </dd>
 
         <dt>
@@ -142,13 +143,14 @@
                 {
                     <div>Add date: @item.Date</div>
                     <div>Description: @item.Body</div>
+                    <div>By @item.User.Email</div>
                     if (ViewBag.Identity == "Admin" || ViewBag.Identity == "Manager" || item.UserId == ViewBag.UserId)
                     {
-                        @Html.ActionLink("Delete", "DeleteCommentFromTcket", new { id = item.Id })
+                        @Html.ActionLink("Edit", "EditComment", new { id = item.Id }, null) @Html.ActionLink("Delete", "DeleteCommentFromTcket", new { id = item.Id })
                     }
                 }
             }
-             | @Html.ActionLink("Add comment", "AddCommentToTicket", new { id = Model.Id }, null)
+            | @Html.ActionLink("Add comment", "AddCommentToTicket", new { id = Model.Id }, null)
         </dd>
 
         <dt>

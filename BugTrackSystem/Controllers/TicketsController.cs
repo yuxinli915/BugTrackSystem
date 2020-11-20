@@ -121,8 +121,33 @@ namespace BugTrackSystem.Controllers
         }
 
         [Authorize]
+        public ActionResult EditComment(int id)
+        {
+            var comment = db.Comments.Find(id);
+            return View("AddCommentToTicket", comment);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditComment(int id, TicketComment comment)
+        {
+            if (ModelState.IsValid)
+            {
+                var oldC = db.Comments.Find(id);
+                comment.TicketId = oldC.TicketId;
+                comment.Date = DateTime.Now;
+                comment.UserId = User.Identity.GetUserId();
+                TicketHelper.DeleteCommentFromTcket(id);
+                TicketHelper.AddCommentToTicket(db, comment);
+                return RedirectToAction("Detail", new { id = comment.TicketId });
+            }
+            return View("AddCommentToTicket", comment);
+        }
+
+        [Authorize]
         public ActionResult AddAttchmentToTicket(int id)
         {
+           
             return View();
         }
 
@@ -139,6 +164,31 @@ namespace BugTrackSystem.Controllers
                 return RedirectToAction("Detail", "Tickets", new { id });
             }
             return View(attchment);
+        }
+
+        [Authorize]
+        public ActionResult EditAttchment(int id)
+        {
+            var attachment = db.Attachments.Find(id);
+            return View("AddAttchmentToTicket", attachment);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditAttchment(int id, TicketAttachment attchment)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                var oldA = db.Attachments.Find(id);
+                attchment.TicketId = oldA.TicketId;
+                attchment.Date = DateTime.Now;
+                attchment.UserId = User.Identity.GetUserId();
+                TicketHelper.DeleteAttchmentFormTcket(id);
+                TicketHelper.AddAttchmentToTcket(db, attchment);
+                return RedirectToAction("Detail", "Tickets", new { id  = attchment.TicketId });
+            }
+            return View("AddAttchmentToTicket", attchment);
         }
 
         [Authorize]
