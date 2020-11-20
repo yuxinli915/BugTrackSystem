@@ -129,7 +129,7 @@ namespace BugTrackSystem.Controllers
         {
             var project = db.Projects.Find(projId);
 
-            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Name");
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
             return View();
         }
 
@@ -139,9 +139,9 @@ namespace BugTrackSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = db.Users.Find(userId);
-                ProjectHelper.AssignUserToProject(user.Id, projId);
-                return RedirectToAction("Index", "Manage", new { id = projId });
+                //var user = db.Users.Find(userId);
+                ProjectHelper.AssignUserToProject(userId, projId);
+                return RedirectToAction("Index", "Manage", new { projId });
             }
 
             ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Name");

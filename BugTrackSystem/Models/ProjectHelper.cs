@@ -57,7 +57,7 @@ namespace BugTrackSystem.Models
             return db.Projects.Where(p => p.Id == PId).ToList();           
         }
 
-        /*For archived projects, dont show the in view if !IsArchived*/
+        
 
         public static bool AssignUserToProject(string UserId, int ProjId)
         {
