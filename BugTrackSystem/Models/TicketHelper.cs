@@ -10,38 +10,24 @@ namespace BugTrackSystem.Models
     {
         static ApplicationDbContext db = new ApplicationDbContext();
 
-        public static bool DeleteCommentFromTcket(int id)
+        public static void DeleteCommentFromTcket(int id)
         {
-            var comment = db.Comments.Where(i => i.Id == id).FirstOrDefault();
-            if (comment != null)
-            {
-                db.Comments.Remove(comment);
-                db.SaveChanges();
-                return true;
-            }
-            return false;
+            var comment = db.Comments.FirstOrDefault(i => i.Id == id);
+            db.Comments.Remove(comment);
+            db.SaveChanges();
         }
-        public static bool AddAttchmentToTcket(int id, TicketAttachment attachment)
+
+        public static void AddAttchmentToTcket(ApplicationDbContext database, TicketAttachment attachment)
         {
-            if (attachment != null)
-            {
-                attachment.TicketId = id;
-                db.Attachments.Add(attachment);
-                db.SaveChanges();
-                return true;
-            }
-            return false;
+            database.Attachments.Add(attachment);
+            database.SaveChanges();
         }
-        public static bool DeleteAttchmentFormTcket(int id, int ticketId)
+
+        public static void DeleteAttchmentFormTcket(int id)
         {
-            var attchment = db.Attachments.Where(j => j.Id == id && j.TicketId == ticketId).FirstOrDefault();
-            if (attchment != null)
-            {
-                db.Attachments.Remove(attchment);
-                db.SaveChanges();
-                return true;
-            }
-            return false;
+            var attachment = db.Attachments.FirstOrDefault(i => i.Id == id);
+            db.Attachments.Remove(attachment);
+            db.SaveChanges();
         }
 
         public static IEnumerable<Ticket> GetAllTicketsForUser(string id)
