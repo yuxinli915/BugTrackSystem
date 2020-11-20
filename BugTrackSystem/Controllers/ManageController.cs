@@ -92,7 +92,7 @@ namespace BugTrackSystem.Controllers
             }    
             else if (User.IsInRole("Submitter"))
             {
-                model.Tickets = db.Tickets.Where(t => t.OwnerId == userId).ToList();
+                model.Tickets = db.Tickets.Where(t => t.OwnerId == userId).OrderByDescending(t => t.Created).ToList();
             }    
             return View(model);
         }

@@ -146,6 +146,7 @@ else if (User.IsInRole("Manager"))
 }
 else
 {
+    @Html.ActionLink("Submit a new ticket", "CreateTicketPage", "Tickets")
     <p>Most Recent Tickets:</p>
     foreach (var ticket in Model.Tickets)
     {

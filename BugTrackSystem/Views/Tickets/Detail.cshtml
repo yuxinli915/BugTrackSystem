@@ -5,7 +5,7 @@
 
 <h2>Detail</h2>
 
-
+@Html.ActionLink("Edit","EditTicketDetail","Tickets",new { id = Model.Id},null)
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -128,7 +128,7 @@
                     }
                 }
             }
-            @Html.ActionLink("Add attachment", "AddAttchmentToTicket")
+             | @Html.ActionLink("Add attachment", "AddAttchmentToTicket",new { id = Model.Id},null)
         </dd>
 
         <dt>
@@ -148,7 +148,7 @@
                     }
                 }
             }
-            @Html.ActionLink("Add comment", "AddCommentToTicket")
+             | @Html.ActionLink("Add comment", "AddCommentToTicket", new { id = Model.Id }, null)
         </dd>
 
         <dt>

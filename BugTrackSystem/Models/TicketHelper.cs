@@ -133,8 +133,7 @@ namespace BugTrackSystem.Models
             PropertyInfo[] fi = ticket.GetType().GetProperties();
             foreach (var field in fi)
             {
-                if (field.GetValue(ticket).Equals(field.GetValue(EditedTicket)) &&
-                    (field.Name == "Title" || field.Name == "Description" || field.Name == "TicketStatus" || field.Name == "TicketType" || field.Name == "TicketProperty"))
+                if ((field.Name == "Title" || field.Name == "Description" || field.Name == "TicketStatus" || field.Name == "TicketType" || field.Name == "TicketProperty") && field.GetValue(ticket) != field.GetValue(EditedTicket))
                 {
                     database.Histories.Add(
                         new TicketHistory

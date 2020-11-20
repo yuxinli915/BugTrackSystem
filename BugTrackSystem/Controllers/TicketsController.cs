@@ -18,16 +18,28 @@ namespace BugTrackSystem.Controllers
         [Authorize(Roles = "Submitter")]
         public ActionResult CreateTicketPage()
         {
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Title");
+            ViewBag.TypeId = new SelectList(db.Types, "Id", "Name");
+            ViewBag.PropertyId = new SelectList(db.Properties, "Id", "Name");
             return View();
         }
 
         [Authorize(Roles = "Submitter")]
         [HttpPost]
-        public ActionResult CreateTicketPage(Ticket ticket)
+        public ActionResult CreateTicketPage(Ticket ticket, int ProjectId, int TypeId, int PropertyId)
         {
             if (ModelState.IsValid)
             {
+                ticket.OwnerId = User.Identity.GetUserId();
+                ticket.ProjectId = ProjectId;
+                ticket.TicketTypeId = TypeId;
+                ticket.TicketStatus = db.Statuses.First(s => s.Name == "Unassigned");
+                ticket.TicketPropertyId = PropertyId;
+                ticket.Created = DateTime.Now;
                 TicketHelper.CreateTicket(db, ticket);
+                ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Title");
+                ViewBag.TypeId = new SelectList(db.Types, "Id", "Name");
+                ViewBag.PropertyId = new SelectList(db.Properties, "Id", "Name");
                 return RedirectToAction("Index", "Manage");
             }
             return View(ticket);
@@ -36,19 +48,25 @@ namespace BugTrackSystem.Controllers
         [Authorize]
         public ActionResult EditTicketDetail(int id)
         {
+            ViewBag.TypeId = new SelectList(db.Types, "Id", "Name");
+            ViewBag.PropertyId = new SelectList(db.Properties, "Id", "Name");
             var ticket = db.Tickets.Find(id);
             return View(ticket);
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult EditTicketDetail(Ticket editedTicket)
+        public ActionResult EditTicketDetail(Ticket editedTicket, int TypeId, int PropertyId)
         {
             if (ModelState.IsValid)
             {
+                editedTicket.TicketTypeId = TypeId;
+                editedTicket.TicketPropertyId = PropertyId;
                 TicketHelper.EditTicketDetail(db, editedTicket, User.Identity.GetUserId());
                 return RedirectToAction("Index", "Manage");
             }
+            ViewBag.TypeId = new SelectList(db.Types, "Id", "Name");
+            ViewBag.PropertyId = new SelectList(db.Properties, "Id", "Name");
             return View(editedTicket);
         }
 
@@ -56,7 +74,7 @@ namespace BugTrackSystem.Controllers
         public ActionResult AssignUserToTicket(int id)
         {
             var ticket = db.Tickets.Find(id);
-            
+
             ViewBag.SubmitterId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Email");
             return View();
         }
@@ -82,39 +100,43 @@ namespace BugTrackSystem.Controllers
         }
 
         [Authorize]
-        public ActionResult AddCommentToTicket()
+        public ActionResult AddCommentToTicket(int id)
         {
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult AddCommentToTicket(TicketComment comment)
+        public ActionResult AddCommentToTicket(int id, TicketComment comment)
         {
             if (ModelState.IsValid)
             {
+                comment.TicketId = id;
+                comment.Date = DateTime.Now;
                 comment.UserId = User.Identity.GetUserId();
                 TicketHelper.AddCommentToTicket(db, comment);
-                return RedirectToAction("Detail", new { id = comment.TicketId});
+                return RedirectToAction("Detail", new { id });
             }
             return View(comment);
         }
 
         [Authorize]
-        public ActionResult AddAttchmentToTicket()
+        public ActionResult AddAttchmentToTicket(int id)
         {
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult AddAttchmentToTicket(TicketAttachment attchment)
+        public ActionResult AddAttchmentToTicket(int id, TicketAttachment attchment)
         {
             if (ModelState.IsValid)
             {
+                attchment.TicketId = id;
+                attchment.Date = DateTime.Now;
                 attchment.UserId = User.Identity.GetUserId();
                 TicketHelper.AddAttchmentToTcket(db, attchment);
-                return RedirectToAction("Detail", new { id = attchment.TicketId});
+                return RedirectToAction("Detail", "Tickets", new { id });
             }
             return View(attchment);
         }
@@ -124,14 +146,7 @@ namespace BugTrackSystem.Controllers
         {
             var ticketId = db.Comments.Find(id).TicketId;
             TicketHelper.DeleteCommentFromTcket(id);
-            return RedirectToAction("Detail", new { id = ticketId});
-        }
-
-
-        [Authorize]
-        public ActionResult DeleteAttchmentFormTcket()
-        {
-            return View();
+            return RedirectToAction("Detail", new { id = ticketId });
         }
 
         [Authorize]
@@ -139,7 +154,7 @@ namespace BugTrackSystem.Controllers
         {
             var ticketId = db.Attachments.Find(id).TicketId;
             TicketHelper.DeleteAttchmentFormTcket(id);
-            return RedirectToAction("Detail", new { id = ticketId});
+            return RedirectToAction("Detail", new { id = ticketId });
         }
 
         [Authorize]
@@ -166,7 +181,7 @@ namespace BugTrackSystem.Controllers
         [Authorize]
         public ActionResult Detail(int id)
         {
-            Ticket ticket = db.Tickets.Include(t=>t.Owner).Include(t => t.TicketStatus).Include(t => t.AssignedUser).Include(t => t.TicketProperty).Include(t => t.TicketType).First(t => t.Id == id);
+            Ticket ticket = db.Tickets.Include(t => t.Owner).Include(t => t.Attachments).Include(t => t.Comments).Include(t => t.TicketStatus).Include(t => t.AssignedUser).Include(t => t.TicketProperty).Include(t => t.TicketType).First(t => t.Id == id);
             if (User.IsInRole("Admin"))
             {
                 ViewBag.Identity = "Admin";

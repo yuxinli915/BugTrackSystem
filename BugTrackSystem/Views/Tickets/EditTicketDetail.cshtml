@@ -36,26 +36,16 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.TicketStatusId, "Status", htmlAttributes: new { @class = "control-label col-md-2" })
+
         <div class="col-md-10">
-            @Html.DropDownList("TicketStatusId", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.TicketStatusId, "", new { @class = "text-danger" })
+            Type: @Html.DropDownList("PropertyId")
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.TicketTypeId, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("TicketTypeId", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.TicketTypeId, "", new { @class = "text-danger" })
-        </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.TicketPropertyId, "property", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("TicketPropertyId", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.TicketPropertyId, "", new { @class = "text-danger" })
+            Type: @Html.DropDownList("TypeId")
         </div>
     </div>
 
