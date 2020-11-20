@@ -32,15 +32,19 @@ namespace BugTrackSystem.Models
             return false;
         }
 
-        public static bool EditProject(int? id, string title)
+        public static bool EditProject(Project project)
         {
-            if (db.Projects.Any(p => p.Id == id) && !db.Projects.Any(p => p.Title == title))
+            try
             {
-                var project = db.Projects.Find(id);
-                project.Title = title;
+                db.Entry(project).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
                 return true;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
+            
         }
 
         public static List<Project> GetAllProjectsForUser(string id)
