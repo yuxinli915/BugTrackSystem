@@ -28,7 +28,7 @@ namespace BugTrackSystem.Models
                 return true;
             }
         }
-                public static void CreateRole(string roleName)
+        public static void CreateRole(string roleName)
         {
             if (!roleManager.RoleExists(roleName))
                 roleManager.Create(new IdentityRole { Name = roleName });
@@ -78,12 +78,11 @@ namespace BugTrackSystem.Models
             ticketChangeNotification.Body = $"Created: {DateTime.Now.ToString()} - there was a change to ticket #{ticketId}.";
         }
 
-        public static string GetUserRole()
+        public static List<ApplicationUser> AllUsersInRole(string roleName)
         {
-            var userId = HttpContext.Current.User.Identity.GetUserId();
-            var userRole = userManager.GetRoles(userId).FirstOrDefault().ToString();
+            var role = roleManager.Roles.FirstOrDefault(i => i.Name == roleName);
 
-            return userRole;
+            return userManager.Users.Where(i => i.Roles.Any(j => j.RoleId == role.Id)).ToList();
         }
     }
 }
