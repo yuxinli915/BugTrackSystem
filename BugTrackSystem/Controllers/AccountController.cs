@@ -12,9 +12,11 @@ using BugTrackSystem.Models;
 
 namespace BugTrackSystem.Controllers
 {
+
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -79,7 +81,7 @@ namespace BugTrackSystem.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Manage");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -402,10 +404,27 @@ namespace BugTrackSystem.Controllers
             return RedirectToAction("ModifyUserRole", "Account");
         }
 
-        public ActionResult AddUserToRole(string userId, string Role)
+        [Authorize(Roles = "Admin")]
+        public ActionResult AssignUserToRole(string userId)
         {
+            var user = db.Users.Find(userId);
+            ViewBag.SubmitterId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "1")), "Id", "Name"); // Need to get developer role id.
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public ActionResult AssignUserToRole(string userId, string roleName)
+        {
+            if (ModelState.IsValid)
+            {
+                UserHelper.AddUserToRole(userId, roleName);
+                return RedirectToAction("Index", "Manage");
+            }
+            ViewBag.userId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "1")), "Id", "Name");
+            return View();
+        }
+
 
         //
         // GET: /Account/ExternalLoginFailure

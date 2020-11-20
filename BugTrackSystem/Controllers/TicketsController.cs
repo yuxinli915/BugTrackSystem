@@ -224,7 +224,7 @@ namespace BugTrackSystem.Controllers
                 else if (User.IsInRole("Manager"))
                 {
                     var projects = ProjectHelper.GetAllProjectsForUser(User.Identity.GetUserId());
-                    var task = projects.Where(i => i.Tickets.Where(j => j.Comments.Where(k=>k.Id==commentId).Any()).Any())
+                    var task = projects.Where(i => i.Tickets.Where(j => j.Comments.Where(k => k.Id == commentId).Any()).Any())
                         .FirstOrDefault();
                     if (task != null)
                     {
@@ -245,7 +245,7 @@ namespace BugTrackSystem.Controllers
                     var task = TicketHelper.GetAllTicketsForSumitter(User.Identity.GetUserId());
                     if (task != null)
                     {
-                        var ticket = task.Where(i => i.Comments.Where(j=>j.Id == commentId).Any()).FirstOrDefault();
+                        var ticket = task.Where(i => i.Comments.Where(j => j.Id == commentId).Any()).FirstOrDefault();
                         if (ticket != null)
                         {
                             TicketHelper.DeleteCommentFromTcket(commentId);
@@ -329,5 +329,6 @@ namespace BugTrackSystem.Controllers
             var tickties = TicketHelper.FilterTickets(filters);
             return View(tickties);
         }
+
     }
-}
+    }

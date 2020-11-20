@@ -3,85 +3,156 @@
     ViewBag.Title = "Manage";
 }
 
-<h2>@ViewBag.Title.</h2>
+<style>
+    table {
+        border-collapse: separate;
+        border: solid black 2px;
+        box-shadow: 5px 10px #888888;
+    }
 
-<p class="text-success">@ViewBag.StatusMessage</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-left: solid black 1px;
+        border-top: solid black 1px;
+    }
+
+    th {
+        border-top: none;
+    }
+
+        td:first-child, th:first-child {
+            border-left: none;
+        }
+
+    .floatleft {
+        width: 50%;
+        float: left;
+    }
+
+    .floatright {
+        width: 50%;
+        float: right;
+    }
+
+    .container {
+        overflow: hidden;
+    }
+</style>
+
+
+@if (User.IsInRole("Admin"))
+{
+
+    <h3>Welcome to the Admin Dashboard!</h3>
+
+    <div class="container">
+        <div class="floatleft" style="width:50%">
+            <p>Current Projects: @Model.Projects.Count()</p>
+
+            @foreach (var project in Model.Projects)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                <table style="width: 43%;border:groove;">
+                    <tr>
+                        <th>Project: @project.Title</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+                    </tr>
+                    <tr>
+                        <td>Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )</td>
+                    </tr>
+                </table>
+                <br />
+
             }
-            else
+        </div>
+        <div class="floatright" style="width:25%">
+            <p>Most Recent Tickets:</p>
+            @foreach (var ticket in Model.Tickets)
             {
-                @Html.ActionLink("Create", "SetPassword")
+                <table style="width: 43%;border:groove;">
+                    <tr>
+                        <th>Ticket: @ticket.Title</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px;">@ticket.Description</td>
+                    </tr>
+                    <tr>
+                        <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+                    </tr>
+                </table>
+                <br />
+
             }
-            ]
-        </dd>
-        <dt>External Logins:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
-        @*
-            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-             
-             See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-             
-             Uncomment the following block after you have set up two-factor authentication
-        *@
-        @*  
-            <dt>Phone Number:</dt>
-            <dd>
-                @(Model.PhoneNumber ?? "None")
-                @if (Model.PhoneNumber != null)
-                {
-                    <br />
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                    using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
-                    }
-                }
-                else
-                {
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-                }
-            </dd>
-        *@
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication.
-            </p>
-            @*@if (Model.TwoFactor)
-                {
-                    using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>Enabled
-                        <input type="submit" value="Disable" class="btn btn-link" />
-                        </text>
-                    }
-                }
-                else
-                {
-                    using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>Disabled
-                        <input type="submit" value="Enable" class="btn btn-link" />
-                        </text>
-                    }
-                }*@
-        </dd>
-    </dl>
-</div>
+        </div>
+    </div>
+}
+else if (User.IsInRole("Manager"))
+{
+
+    <h3>Welcome to the Project Manager Dashboard!</h3>
+
+    <div class="container">
+        <div class="floatleft" style="width:50%">
+            <p>Current Projects: @Model.Projects.Count()</p>
+
+            @foreach (var project in Model.Projects)
+            {
+                <table style="width: 43%;border:groove;">
+                    <tr>
+                        <th>Project: @project.Title</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+                    </tr>
+                    <tr>
+                        <td>Project Manager: @project.ApplicationUsers.ToString()</td>
+                    </tr>
+                </table>
+                <br />
+
+            }
+        </div>
+        <div class="floatright" style="width:25%">
+            <p>Most Recent Tickets:</p>
+            @foreach (var ticket in Model.Tickets)
+            {
+                <table style="width: 43%;border:groove;">
+                    <tr>
+                        <th>Ticket: @ticket.Title</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px;">@ticket.Description</td>
+                    </tr>
+                    <tr>
+                        <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+                    </tr>
+                </table>
+                <br />
+
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>Most Recent Tickets:</p>
+    foreach (var ticket in Model.Tickets)
+    {
+        <table style="width: 43%;border:groove;">
+            <tr>
+                <th>Ticket: @ticket.Title</th>
+            </tr>
+            <tr>
+                <td style="padding:15px;">@ticket.Description Ticket description goes here</td>
+            </tr>
+            <tr>
+                <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+            </tr>
+        </table>
+        <br />
+
+    }
+
+}

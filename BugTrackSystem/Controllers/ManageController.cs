@@ -15,6 +15,7 @@ namespace BugTrackSystem.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public ManageController()
         {
@@ -70,8 +71,29 @@ namespace BugTrackSystem.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
             };
+
+            ViewBag.User = db.Users.Find(userId);
+
+            if (User.IsInRole("Admin"))
+            {
+                model.Projects = db.Projects.ToList();
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Created).Take(5).ToList();
+            }
+            else if (User.IsInRole("Manager"))
+            {
+                model.Projects = db.Projects.ToList(); //should be filtered by projects the manager belongs to 
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Created).Take(5).ToList();
+            }
+            else if (User.IsInRole("Developer"))
+            {
+                model.Tickets = db.Tickets.Where(t => t.AssignedUserId == userId).ToList();
+            }    
+            else if (User.IsInRole("Submitter"))
+            {
+                model.Tickets = db.Tickets.Where(t => t.OwnerId == userId).ToList();
+            }    
             return View(model);
         }
 
@@ -331,7 +353,7 @@ namespace BugTrackSystem.Controllers
             }
 
             base.Dispose(disposing);
-        }
+        }         
 
 #region Helpers
         // Used for XSRF protection when adding external logins
