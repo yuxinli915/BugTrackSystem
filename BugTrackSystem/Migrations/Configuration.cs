@@ -305,8 +305,7 @@ namespace BugTrackSystem.Migrations
                     IsArchived=false,
               //      Tickets= tickets.Where(i=>i.ProjectId==1).ToList(),
                     ApplicationUsers=appUsers.Where(i=>i.UserName.StartsWith("admin")
-                    && i.UserName.StartsWith("manager")
-                    && i.UserName=="submitter1@mysite.com").ToList()
+                    || i.UserName.StartsWith("manager1")).ToList()
 
                 },
                 new Project
@@ -316,13 +315,13 @@ namespace BugTrackSystem.Migrations
                     IsArchived=false,
                   //  Tickets= tickets.Where(i=>i.ProjectId==2).ToList(),
                     ApplicationUsers=appUsers.Where(i=>i.UserName.StartsWith("admin")
-                    && i.UserName.StartsWith("manager")
-                    && i.UserName=="submitter2@mysite.com").ToList()
+                    || i.UserName.StartsWith("manager2")).ToList()
                 }
             };
             context.Projects.AddOrUpdate(t => t.Title, projects);
 
             context.Tickets.AddOrUpdate(t => t.Title, tickets);
+
         }
     }
 }
