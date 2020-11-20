@@ -53,7 +53,8 @@ namespace BugTrackSystem.Controllers
         public ActionResult AssignUserToTicket(int id)
         {
             var ticket = db.Tickets.Find(id);
-            ViewBag.SubmitterId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "3")), "Id", "Name"); // Need to get developer role id.
+            
+            ViewBag.SubmitterId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
             return View();
         }
 
@@ -66,7 +67,7 @@ namespace BugTrackSystem.Controllers
                 TicketHelper.AssignUserToTicket(db, id, userId);
                 return RedirectToAction("Detail", new { id });
             }
-            ViewBag.userId = new SelectList(db.Users.Where(u => u.Roles.Any(r => r.RoleId == "3")), "Id", "Name");
+            ViewBag.userId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
             return View();
         }
 
