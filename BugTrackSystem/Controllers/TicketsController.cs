@@ -3,6 +3,9 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
+using System.Data.Entity;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -54,20 +57,20 @@ namespace BugTrackSystem.Controllers
         {
             var ticket = db.Tickets.Find(id);
             
-            ViewBag.SubmitterId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
+            ViewBag.SubmitterId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Email");
             return View();
         }
 
         [Authorize(Roles = "Admin, Manager")]
         [HttpPost]
-        public ActionResult AssignUserToTicket(int id, string userId)
+        public ActionResult AssignUserToTicket(int id, string SubmitterId)
         {
             if (ModelState.IsValid)
             {
-                TicketHelper.AssignUserToTicket(db, id, userId);
+                TicketHelper.AssignUserToTicket(db, id, SubmitterId);
                 return RedirectToAction("Detail", new { id });
             }
-            ViewBag.userId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
+            ViewBag.SubmitterId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Email");
             return View();
         }
 
@@ -163,8 +166,23 @@ namespace BugTrackSystem.Controllers
         [Authorize]
         public ActionResult Detail(int id)
         {
-            var ticket = db.Tickets.Find(id);
-            ViewBag.RoleId = db.Users.Find(User.Identity.GetUserId()).Roles.First().RoleId;
+            Ticket ticket = db.Tickets.Include(t=>t.Owner).Include(t => t.TicketStatus).Include(t => t.AssignedUser).Include(t => t.TicketProperty).Include(t => t.TicketType).First(t => t.Id == id);
+            if (User.IsInRole("Admin"))
+            {
+                ViewBag.Identity = "Admin";
+            }
+            if (User.IsInRole("Manager"))
+            {
+                ViewBag.Identity = "Manager";
+            }
+            if (User.IsInRole("Developer"))
+            {
+                ViewBag.Identity = "Developer";
+            }
+            if (User.IsInRole("Submitter"))
+            {
+                ViewBag.Identity = "Submitter";
+            }
             ViewBag.UserId = User.Identity.GetUserId();
             return View(ticket);
         }

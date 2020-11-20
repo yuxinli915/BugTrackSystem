@@ -23,7 +23,9 @@ namespace BugTrackSystem.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
-
+            context.Database.ExecuteSqlCommand("sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL'");
+            context.Database.ExecuteSqlCommand("sp_MSForEachTable 'IF OBJECT_ID(''?'') NOT IN (ISNULL(OBJECT_ID(''[dbo].[__MigrationHistory]''),0)) DELETE FROM ?'");
+            context.Database.ExecuteSqlCommand("EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL'");
             /*Roles*/
             string[] roles = { "Admin", "Manager", "Developer", "Submitter" };
             foreach (var RoleName in roles)
@@ -46,12 +48,35 @@ namespace BugTrackSystem.Migrations
             foreach (var usr in Users)
             {
                 var PasswordHash = new PasswordHasher();
-                var user = new ApplicationUser
+                ApplicationUser user;
+                if (usr.StartsWith("sub"))
                 {
-                    UserName = usr,
-                    Email = usr,
-                    PasswordHash = PasswordHash.HashPassword("123456")
-                };
+                    user = new Submitter
+                    {
+                        UserName = usr,
+                        Email = usr,
+                        PasswordHash = PasswordHash.HashPassword("123456"),
+                        Tickets = new HashSet<Ticket>()
+                    };
+                }else if(usr.StartsWith("dev"))
+                {
+                    user = new Developer
+                    {
+                        UserName = usr,
+                        Email = usr,
+                        PasswordHash = PasswordHash.HashPassword("123456")
+                    };
+                }
+                else
+                {
+                    user = new ApplicationUser
+                    {
+                        UserName = usr,
+                        Email = usr,
+                        PasswordHash = PasswordHash.HashPassword("123456")
+                    };
+                }
+
                 if (!context.Users.Any(u => u.UserName == usr))
                 {
                     var store = new UserStore<ApplicationUser>(context);

@@ -72,7 +72,7 @@
             Assigned developer
         </dt>
 
-        @if (ViewBag.RoleId == "1" || ViewBag.RoleId == "2")
+        @if (ViewBag.Identity == "Admin" || ViewBag.Identity == "Manager")
         {
             if (Model.AssignedUserId == null)
             {
@@ -87,13 +87,13 @@
                 </dd>
             }
         }
-        else if (ViewBag.RoleId == "3")
+        else if (ViewBag.Identity == "Developer")
         {
             <dd>
                 You are assigned to this ticket.
             </dd>
         }
-        else if (ViewBag.RoleId == "4")
+        else if (ViewBag.Identity == "Submitter")
         {
             if (Model.AssignedUserId == null)
             {
@@ -122,7 +122,7 @@
                     <div>Description: @item.Description</div>
                     <div>File path: @item.FilePath</div>
                     <div>File url: @item.FileUrl</div>
-                    if (ViewBag.RoleId == "1" || ViewBag.RoleId == "2" || item.UserId == ViewBag.UserId)
+                    if (ViewBag.Identity == "Admin" || ViewBag.Identity == "Manager" || item.UserId == ViewBag.UserId)
                     {
                         @Html.ActionLink("Delete", "DeleteAttchmentFormTcket", new { id = item.Id })
                     }
@@ -142,13 +142,30 @@
                 {
                     <div>Add date: @item.Date</div>
                     <div>Description: @item.Body</div>
-                    if (ViewBag.RoleId == "1" || ViewBag.RoleId == "2" || item.UserId == ViewBag.UserId)
+                    if (ViewBag.Identity == "Admin" || ViewBag.Identity == "Manager" || item.UserId == ViewBag.UserId)
                     {
                         @Html.ActionLink("Delete", "DeleteCommentFromTcket", new { id = item.Id })
                     }
                 }
             }
             @Html.ActionLink("Add comment", "AddCommentToTicket")
+        </dd>
+
+        <dt>
+            Histroy
+        </dt>
+
+        <dd>
+            @if (Model.Histories != null)
+            {
+                foreach (var item in Model.Histories)
+                {
+                    <div>Date: @item.Date</div>
+                    <div>Property: @item.Property</div>
+                    <div>Old value: @item.OldValue</div>
+                    <div>New value: @item.NewValue</div>
+                }
+            }
         </dd>
     </dl>
 </div>
