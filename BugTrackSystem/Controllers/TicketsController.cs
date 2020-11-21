@@ -63,7 +63,7 @@ namespace BugTrackSystem.Controllers
                 editedTicket.TicketTypeId = TypeId;
                 editedTicket.TicketPropertyId = PropertyId;
                 TicketHelper.EditTicketDetail(db, editedTicket, User.Identity.GetUserId());
-                return RedirectToAction("Index", "Manage");
+                return RedirectToAction("Detail", "Tickets", new { id = editedTicket.Id});
             }
             ViewBag.TypeId = new SelectList(db.Types, "Id", "Name");
             ViewBag.PropertyId = new SelectList(db.Properties, "Id", "Name");
@@ -231,7 +231,8 @@ namespace BugTrackSystem.Controllers
         [Authorize]
         public ActionResult Detail(int id)
         {
-            Ticket ticket = db.Tickets.Include(t => t.Owner).Include(t => t.Attachments).Include(t => t.Comments).Include(t => t.TicketStatus).Include(t => t.AssignedUser).Include(t => t.TicketProperty).Include(t => t.TicketType).First(t => t.Id == id);
+            Ticket ticket = db.Tickets.Include(t => t.Owner).Include(t => t.Attachments).Include(t => t.Comments).Include(t => t.TicketStatus).Include(t => t.AssignedUser).Include(t => t.TicketProperty).Include(t => t.TicketType).Include("Attachments.User").Include("Comments.User").First(t => t.Id == id);
+            
             if (User.IsInRole("Admin"))
             {
                 ViewBag.Identity = "Admin";
@@ -250,6 +251,40 @@ namespace BugTrackSystem.Controllers
             }
             ViewBag.UserId = User.Identity.GetUserId();
             return View(ticket);
+        }
+
+        public ActionResult Search(string option, string search)
+        {
+
+            if (option == "Title")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.Title.Contains(search) || search == null).ToList());
+            }
+            else if (option == "Description")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.Description.Contains(search) || search == null).ToList());
+            }
+            else if (option == "Status")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.TicketStatus.Name.Contains(search) || search == null).ToList());
+            }
+            else if (option == "Priority")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.TicketProperty.Name.Contains(search) || search == null).ToList());
+            }
+            else if (option == "Type")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.TicketType.Name.Contains(search) || search == null).ToList());
+            }
+            else if (option == "User")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.Owner.Email.Contains(search) || t.AssignedUser.Email.Contains(search) || search == null).ToList());
+            }
+            else if (option == "Project")
+            {
+                return View("SearchResult", db.Tickets.Where(t => t.Project.Title.Contains(search) || t.Project.Description.Contains(search) || search == null).ToList());
+            }
+            else return View("SearchResult", new List<Ticket>());
         }
     }
 }
