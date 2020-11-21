@@ -16,7 +16,10 @@ namespace BugTrackSystem.Models
         public List<Ticket> Tickets { get; set; }
 
     }
-
+    public class RoleViewModel
+    {
+        public List<ApplicationUser> Users { get; set; }
+    }
     public class ManageLoginsViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }

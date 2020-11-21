@@ -1,0 +1,58 @@
+﻿@model BugTrackSystem.Models.RoleViewModel
+
+@{
+    ViewBag.Title = "RoleManagement";
+}
+
+<h2>Role Management</h2>
+
+<style>
+    .block {
+        width: 50%;
+        float: left;
+        display: inline;
+    }
+
+    table {
+        border-collapse: separate;
+        border: solid black 2px;
+        box-shadow: 5px 10px #888888;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-left: solid black 1px;
+        border-top: solid black 1px;
+    }
+
+    th {
+        border-top: none;
+    }
+
+        td:first-child, th:first-child {
+            border-left: none;
+        }
+
+    .floatleft {
+        width: 50%;
+        float: left;
+    }
+
+    .floatright {
+        width: 50%;
+        float: right;
+    }
+
+    .container {
+        overflow: hidden;
+    }
+</style>
+
+@foreach(var user in Model.Users)
+{
+ <div>
+     UserName: @user.UserName
+     Role: @user.Roles.FirstOrDefault().ToString()
+ </div>
+}

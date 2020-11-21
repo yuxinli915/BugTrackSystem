@@ -97,6 +97,19 @@ namespace BugTrackSystem.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> RoleManagement()
+        {
+            var userId = User.Identity.GetUserId();
+            var model = new RoleViewModel
+            {
+                Users = db.Users.ToList(),
+            };
+
+        return View(model);     
+
+
+        }
+
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
@@ -298,6 +311,58 @@ namespace BugTrackSystem.Controllers
             return View(model);
         }
 
+        //Sort ticket list by title, owner, assignment, creation or recent update date/time, ticket type, priority, status, and project
+        public async Task<ActionResult> SortList(string param)
+        {
+            var userId = User.Identity.GetUserId();
+            var model = new IndexViewModel
+            {
+                HasPassword = HasPassword(),
+                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
+                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
+                Logins = await UserManager.GetLoginsAsync(userId),
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+            };
+
+            if (param == "title")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Title).ToList();
+            }
+            else if(param == "owner" )
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Owner).ToList();
+            }
+            else if (param == "assignment")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.AssignedUser).ToList();
+            }
+            else if (param == "creation")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Created).ToList();
+            }
+            else if (param == "update")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Updated).ToList();
+            }
+            else if (param == "type")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.TicketType).ToList();
+            }
+            else if (param == "priority")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.TicketStatus.Name).ToList();
+            }
+            else if (param == "status")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.TicketStatus.Id).ToList();
+            }
+            else if (param == "project")
+            {
+                model.Tickets = db.Tickets.OrderByDescending(t => t.Project.Id).ToList();
+            }
+
+            return View(model);
+        }
         //
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)

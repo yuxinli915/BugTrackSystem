@@ -50,7 +50,22 @@
 @if (User.IsInRole("Admin"))
 {
 
-    <h3>Welcome to the Admin Dashboard!</h3>
+    <h3>Welcome to the Admin Dashboard!</h3><br/>
+    <div>
+
+        Sort By:
+        @Html.ActionLink("Title", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Owner", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Assignment", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Created", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Updated", "SortList",  new { param = "title" })&nbsp;|
+        @Html.ActionLink("Type", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Priority", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Status", "SortList", new { param = "title" })&nbsp;|
+        @Html.ActionLink("Project", "SortList", new { param = "title" })&nbsp;|
+
+
+    </div>
 
     <div class="block">
         <p>Current Projects: @Model.Projects.Where(p=>p.IsArchived == false).Count()</p>
@@ -82,13 +97,15 @@
                             {
                                 foreach (var m in project.ApplicationUsers)
                                 {
-                                    <span>
-                                        @m.Email |
-                                        @if (!m.Email.StartsWith("admin"))
-                                        {
-                                            @Html.ActionLink("Remove", "RemoveUserFromProject", "Projects", new { userId = m.Id, projId = project.Id }, null)
-                                        }
-                                    </span>
+                        <span>
+                            @m.Email |
+                            @if (!m.Email.StartsWith("admin"))
+                            {
+                                @Html.ActionLink("Remove", "RemoveUserFromProject", "Projects", new { userId = m.Id, projId = project.Id }, null)
+                                @Html.ActionLink("Assign User", "AddUserToProject", "Projects", new { projId = project.Id }, null)
+
+                            }
+                        </span>
                                 }
                             }
                         </td>
@@ -105,19 +122,10 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.ActionLink("Assign User", "AddUserToProject", "Projects", new { projId = project.Id }, null)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)
-                        </td>
-                    </tr>
+
                 </table>
                 <br />
             }
