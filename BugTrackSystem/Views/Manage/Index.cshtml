@@ -53,12 +53,18 @@
     <h3>Welcome to the Admin Dashboard!</h3>
 
     <div class="block">
-        <p>Current Projects: @Model.Projects.Where(p=>p.IsArchived == false).Count()</p>
+        <p>Current Projects: @Model.Projects.Where(p => p.IsArchived == false).Count()</p>
         <div>
             <b>
                 @Html.ActionLink("Create New Project", "Create", "Projects")
             </b>
         </div>
+        <div>
+            <b>
+                @Html.ActionLink("Show Archived Projects", "ShowArchivedProjects", "Projects")
+            </b>
+        </div>
+        
 
         @foreach (var project in Model.Projects)
         {
@@ -113,11 +119,6 @@
                             @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)
-                        </td>
-                    </tr>
                 </table>
                 <br />
             }
@@ -158,24 +159,37 @@ else if (User.IsInRole("Manager"))
                 @Html.ActionLink("Create New Project", "Create", "Projects")
             </b>
         </div>
+        <div>
+            <b>
+                @Html.ActionLink("Show Archived Projects", "ShowArchivedProjects", "Projects")
+            </b>
+        </div>
 
         @foreach (var project in Model.Projects)
         {
-            <table style="width: 43%;border:groove;">
-                <tr>
-                    <th>Project: @project.Title</th>
-                </tr>
-                <tr>
-                    <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
-                </tr>
-                <tr>
-                    <td>
-                        Project Manager: @project.ApplicationUsers.ToString()
-                        @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
-
-                        @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
-                    </td>
-            </table>
+    <table style="width: 43%;border:groove;">
+        <tr>
+            <th>Project: @project.Title</th>
+        </tr>
+        <tr>
+            <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+        </tr>
+        <tr>
+            <td>
+                Project Manager: @project.ApplicationUsers.ToString()
+                @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |                
+            </td>
+        <tr>
+            <td>
+                @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Archive", "ArchiveProject", "Projects", new { projId = project.Id }, null)
+            </td>
+        </tr>
+    </table>
             <br />
 
         }
