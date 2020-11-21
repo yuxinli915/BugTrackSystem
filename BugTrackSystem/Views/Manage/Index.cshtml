@@ -9,6 +9,7 @@
         float: left;
         display: inline;
     }
+
     table {
         border-collapse: separate;
         border: solid black 2px;
@@ -52,44 +53,59 @@
     <h3>Welcome to the Admin Dashboard!</h3>
 
     <div class="block">
-            <p>Current Projects: @Model.Projects.Count()</p>
-
-            @foreach (var project in Model.Projects)
-            {
-                <table style="width: 43%;border:groove;">
-                    <tr>
-                        <th>Project: @project.Title</th>
-                    </tr>
-                    <tr>
-                        <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
-                    </tr>
-                    <tr>
-                        <td>Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )</td>
-                    </tr>
-                </table>
-                <br />
-
-            }
+        <p>Current Projects: @Model.Projects.Count()</p>
+        <div>
+            <b>
+                @Html.ActionLink("Create New Project", "Create", "Projects")
+            </b>
         </div>
-        <div class="block">
-            <p>Most Recent Tickets:</p>
-            @foreach (var ticket in Model.Tickets)
-            {
-                <table style="width: 43%;border:groove;">
-                    <tr>
-                        <th>Ticket: @ticket.Title</th>
-                    </tr>
-                    <tr>
-                        <td style="padding:15px;">@ticket.Description</td>
-                    </tr>
-                    <tr>
-                        <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
-                    </tr>
-                </table>
-                <br />
 
-            }
-        </div>
+        @foreach (var project in Model.Projects)
+        {
+            <table style="width: 43%;border:groove;">
+                <tr>
+                    <th>Project: @project.Title</th>
+                </tr>
+                <tr>
+                    <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+                </tr>
+                <tr>
+                    <td>
+                        Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )
+                        @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
+
+                        @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+
+                    </td>
+                </tr>
+
+            </table>
+            <br />
+
+        }
+    </div>
+    <div class="block">
+        <p>Most Recent Tickets:</p>
+        @foreach (var ticket in Model.Tickets)
+        {
+            <table style="width: 43%;border:groove;">
+                <tr>
+                    <th>Ticket: @ticket.Title</th>
+                </tr>
+                <tr>
+                    <td style="padding:15px;">@ticket.Description</td>
+                </tr>
+                <tr>
+                    <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+                </tr>
+                <tr>
+                    <th>@Html.ActionLink("Detail", "Detail", "Tickets", new { id = ticket.Id }, null)</th>
+                </tr>
+            </table>
+            <br />
+
+        }
+    </div>
 }
 else if (User.IsInRole("Manager"))
 {
@@ -97,47 +113,60 @@ else if (User.IsInRole("Manager"))
     <h3>Welcome to the Project Manager Dashboard!</h3>
 
     <div class="block">
-            <p>Current Projects: @Model.Projects.Count()</p>
-
-            @foreach (var project in Model.Projects)
-            {
-                <table style="width: 43%;border:groove;">
-                    <tr>
-                        <th>Project: @project.Title</th>
-                    </tr>
-                    <tr>
-                        <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
-                    </tr>
-                    <tr>
-                        <td>Project Manager: @project.ApplicationUsers.ToString()</td>
-                    </tr>
-                </table>
-                <br />
-
-            }
+        <p>Current Projects: @Model.Projects.Count()</p>
+        <div>
+            <b>
+                @Html.ActionLink("Create New Project", "Create", "Projects")
+            </b>
         </div>
-        <div class="block">
-            <p>Most Recent Tickets:</p>
-            @foreach (var ticket in Model.Tickets)
-            {
-                <table style="width: 43%;border:groove;">
-                    <tr>
-                        <th>Ticket: @ticket.Title</th>
-                    </tr>
-                    <tr>
-                        <td style="padding:15px;">@ticket.Description</td>
-                    </tr>
-                    <tr>
-                        <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
-                    </tr>
-                </table>
-                <br />
 
-            }
-        </div>
+        @foreach (var project in Model.Projects)
+        {
+            <table style="width: 43%;border:groove;">
+                <tr>
+                    <th>Project: @project.Title</th>
+                </tr>
+                <tr>
+                    <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+                </tr>
+                <tr>
+                    <td>
+                        Project Manager: @project.ApplicationUsers.ToString()
+                        @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
+
+                        @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+                    </td>
+</table>
+            <br />
+
+        }
+    </div>
+    <div class="block">
+        <p>Most Recent Tickets:</p>
+        @foreach (var ticket in Model.Tickets)
+        {
+            <table style="width: 43%;border:groove;">
+                <tr>
+                    <th>Ticket: @ticket.Title</th>
+                </tr>
+                <tr>
+                    <td style="padding:15px;">@ticket.Description</td>
+                </tr>
+                <tr>
+                    <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+                </tr>
+                <tr>
+                    <th>@Html.ActionLink("Detail", "Detail", "Tickets", new { id = ticket.Id }, null)</th>
+                </tr>
+            </table>
+            <br />
+
+        }
+    </div>
 }
 else
 {
+    @Html.ActionLink("Submit a new ticket", "CreateTicketPage", "Tickets")
     <p>Most Recent Tickets:</p>
     foreach (var ticket in Model.Tickets)
     {
@@ -150,6 +179,9 @@ else
             </tr>
             <tr>
                 <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
+            </tr>
+            <tr>
+                <th>@Html.ActionLink("Detail", "Detail", "Tickets", new { id = ticket.Id }, null)</th>
             </tr>
         </table>
         <br />
