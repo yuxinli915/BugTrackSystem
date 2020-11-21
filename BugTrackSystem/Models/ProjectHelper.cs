@@ -11,7 +11,7 @@ namespace BugTrackSystem.Models
 
         public static bool CreateProject(Project project)
         {
-            if(db.Projects.Any(p => p.Title == project.Title))
+            if (db.Projects.Any(p => p.Title == project.Title))
             {
                 return false;
             }
@@ -24,7 +24,7 @@ namespace BugTrackSystem.Models
         {
             if (db.Projects.Any(p => p.Id == id))
             {
-                var proj = db.Projects.Find(id);                             
+                var proj = db.Projects.Find(id);
                 db.Projects.Remove(proj);
                 db.SaveChanges();
                 return true;
@@ -44,7 +44,7 @@ namespace BugTrackSystem.Models
             {
                 return false;
             }
-            
+
         }
 
         public static List<Project> GetAllProjectsForUser(string id)
@@ -54,10 +54,10 @@ namespace BugTrackSystem.Models
 
         public static List<Project> GetProjectDetailByProjectId(int? PId)
         {
-            return db.Projects.Where(p => p.Id == PId).ToList();           
+            return db.Projects.Where(p => p.Id == PId).ToList();
         }
 
-        
+
 
         public static bool AssignUserToProject(string UserId, int ProjId)
         {
@@ -83,6 +83,12 @@ namespace BugTrackSystem.Models
                 return true;
             }
             return false;
+        }
+
+        public static void ArchiveProject(int ProjId)
+        {
+            db.Projects.Find(ProjId).IsArchived = true;
+            db.SaveChanges();
         }
     }
 }
