@@ -53,7 +53,7 @@
     <h3>Welcome to the Admin Dashboard!</h3>
 
     <div class="block">
-        <p>Current Projects: @Model.Projects.Count()</p>
+        <p>Current Projects: @Model.Projects.Where(p=>p.IsArchived == false).Count()</p>
         <div>
             <b>
                 @Html.ActionLink("Create New Project", "Create", "Projects")
@@ -62,26 +62,65 @@
 
         @foreach (var project in Model.Projects)
         {
-            <table style="width: 43%;border:groove;">
-                <tr>
-                    <th>Project: @project.Title</th>
-                </tr>
-                <tr>
-                    <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
-                </tr>
-                <tr>
-                    <td>
-                        Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )
-                        @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
-
-                        @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
-
-                    </td>
-                </tr>
-
-            </table>
-            <br />
-
+            if (project.IsArchived == false)
+            {
+                <table style="width: 43%;border:groove;">
+                    <tr>
+                        <th>Project: @project.Title</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Project Manager:
+                            @if (project.ApplicationUsers == null)
+                            {
+                                <span>"No Project Manager Assigned"</span>
+                            }
+                            else
+                            {
+                                foreach (var m in project.ApplicationUsers)
+                                {
+                                    <span>
+                                        @m.Email |
+                                        @if (!m.Email.StartsWith("admin"))
+                                        {
+                                            @Html.ActionLink("Remove", "RemoveUserFromProject", "Projects", new { userId = m.Id, projId = project.Id }, null)
+                                        }
+                                    </span>
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Archive", "ArchiveProject", "Projects", new { projId = project.Id }, null)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Assign User", "AddUserToProject", "Projects", new { projId = project.Id }, null)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)
+                        </td>
+                    </tr>
+                </table>
+                <br />
+            }
         }
     </div>
     <div class="block">
@@ -136,7 +175,7 @@ else if (User.IsInRole("Manager"))
 
                         @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
                     </td>
-</table>
+            </table>
             <br />
 
         }

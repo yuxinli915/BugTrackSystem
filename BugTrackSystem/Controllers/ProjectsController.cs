@@ -45,10 +45,11 @@ namespace BugTrackSystem.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Create([Bind(Include = "Id,Title,Description,IsArchived")] Project project)
+        public ActionResult Create([Bind(Include = "Id,Title,Description")] Project project)
         {
             if (ModelState.IsValid)
             {
+                project.IsArchived = false;
                 ProjectHelper.CreateProject(project);
                 db.SaveChanges();
                 return Redirect("~/Manage/index");
@@ -125,37 +126,45 @@ namespace BugTrackSystem.Controllers
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult AddUserToProject(int projId)
+        public ActionResult AddUserToProject(int? projId)
         {
             var project = db.Projects.Find(projId);
 
-            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Email");
             return View();
         }
 
         //POST: AddUserToProject
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult AddUserToProject(string userId, int projId)
+        [HttpPost]
+        public ActionResult AddUserToProject(int projId, string UserId)
         {
             if (ModelState.IsValid)
             {
                 //var user = db.Users.Find(userId);
-                ProjectHelper.AssignUserToProject(userId, projId);
-                return RedirectToAction("Index", "Manage", new { projId });
+                ProjectHelper.AssignUserToProject(UserId, projId);
+                return RedirectToAction("Index", "Manage");
             }
 
-            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Name");
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Email");
             return View();
         }
 
         //POST: RemoveUserFromProject
-        [Authorize(Roles = "Admin, Manager")]
+        [Authorize(Roles = "Admin")]
         public ActionResult RemoveUserFromProject(string userId, int projId)
         {
-            var user = db.Users.Find(userId);
-            ProjectHelper.RemoveUserFromProject(user.Id, projId);
+            ProjectHelper.RemoveUserFromProject(userId, projId);
 
-            return RedirectToAction("Index", "Manage", new { id = projId });
+            return RedirectToAction("Index", "Manage");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult ArchiveProject( int projId)
+        {
+            ProjectHelper.ArchiveProject(projId);
+
+            return RedirectToAction("Index", "Manage");
         }
     }
 }
