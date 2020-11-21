@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <b> Search Option: </b>
+    @Html.RadioButton("option", "Title") <text>Title</text>
+    @Html.RadioButton("option", "Description") <text> Description </text>
+    @Html.RadioButton("option", "Status")<text>Status</text>
+    @Html.RadioButton("option", "Priority")<text>Priority</text>
+    @Html.RadioButton("option", "Type")<text>Type</text>
+    @Html.RadioButton("option", "User")<text>User</text>
+    @Html.RadioButton("option", "Project")<text>Project</text>
+
+    @Html.TextBox("search")
+    <input type="submit" name="submit" value="Search" />
+}
+
