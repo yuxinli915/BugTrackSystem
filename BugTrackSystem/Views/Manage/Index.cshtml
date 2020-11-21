@@ -54,6 +54,11 @@
 
     <div class="block">
         <p>Current Projects: @Model.Projects.Count()</p>
+        <div>
+            <b>
+                @Html.ActionLink("Create New Project", "Create", "Projects")
+            </b>
+        </div>
 
         @foreach (var project in Model.Projects)
         {
@@ -65,7 +70,13 @@
                     <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
                 </tr>
                 <tr>
-                    <td>Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )</td>
+                    <td>
+                        Project Manager: @((project.ApplicationUsers == null) ? "No Project Manager Assigned" :"Project Manager" )
+                        @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
+
+                        @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+
+                    </td>
                 </tr>
 
             </table>
@@ -103,6 +114,11 @@ else if (User.IsInRole("Manager"))
 
     <div class="block">
         <p>Current Projects: @Model.Projects.Count()</p>
+        <div>
+            <b>
+                @Html.ActionLink("Create New Project", "Create", "Projects")
+            </b>
+        </div>
 
         @foreach (var project in Model.Projects)
         {
@@ -114,9 +130,13 @@ else if (User.IsInRole("Manager"))
                     <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
                 </tr>
                 <tr>
-                    <td>Project Manager: @project.ApplicationUsers.ToString()</td>
-                </tr>
-            </table>
+                    <td>
+                        Project Manager: @project.ApplicationUsers.ToString()
+                        @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
+
+                        @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
+                    </td>
+</table>
             <br />
 
         }
