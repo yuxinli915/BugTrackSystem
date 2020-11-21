@@ -106,8 +106,15 @@ namespace BugTrackSystem.Controllers
             };
 
         return View(model);     
+        }
+        [Authorize(Roles = "Admin")]
 
+        public ActionResult RemoveUserFromRole(string userId)
+        {
+            var roleName = UserHelper.GetRoleForUser(userId);
+            UserHelper.RemoveUserFromRole(userId, roleName);
 
+            return RedirectToAction("RoleManagement", "Manage");
         }
 
         //
@@ -361,7 +368,7 @@ namespace BugTrackSystem.Controllers
                 model.Tickets = db.Tickets.OrderByDescending(t => t.Project.Id).ToList();
             }
 
-            return View(model);
+            return RedirectToAction("Index", "Manage");
         }
         //
         // GET: /Manage/ManageLogins

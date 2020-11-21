@@ -19,6 +19,11 @@ namespace BugTrackSystem.Models
     public class RoleViewModel
     {
         public List<ApplicationUser> Users { get; set; }
+
+        public static string GetRoleName(string userId)
+        {
+            return UserHelper.GetRoleForUser(userId);
+        }
     }
     public class ManageLoginsViewModel
     {
