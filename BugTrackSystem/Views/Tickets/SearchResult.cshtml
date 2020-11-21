@@ -1,4 +1,4 @@
-﻿@model BugTrackSystem.Models.IndexViewModel
+﻿@model IEnumerable<BugTrackSystem.Models.Ticket>
 @{
     ViewBag.Title = "Search Result";
 }
@@ -6,7 +6,7 @@
 <h2>Search Result</h2>
 
 <p>Most Recent Tickets:</p>
-@foreach (var ticket in Model.Tickets)
+@foreach (var ticket in Model)
 {
     <table style="width: 43%;border:groove;">
         <tr>

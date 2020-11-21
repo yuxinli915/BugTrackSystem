@@ -253,6 +253,13 @@ namespace BugTrackSystem.Controllers
             return View(ticket);
         }
 
+        public ActionResult Search()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
         public ActionResult Search(string option, string search)
         {
 
