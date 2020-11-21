@@ -75,7 +75,11 @@
                         @Html.ActionLink("Delete Project", "Delete", "Projects", new { id = project.Id }, null)    |
 
                         @Html.ActionLink("Edit Project", "Edit", "Projects", new { id = project.Id }, null)
-
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.ActionLink("Assign User", "AddUserToProject", "Projects", new { id = project.Id }, null)
                     </td>
                 </tr>
 

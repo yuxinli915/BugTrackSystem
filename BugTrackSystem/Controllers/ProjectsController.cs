@@ -125,26 +125,27 @@ namespace BugTrackSystem.Controllers
         }
 
         [Authorize(Roles = "Admin, Manager")]
-        public ActionResult AddUserToProject(int projId)
+        public ActionResult AddUserToProject(int? projId)
         {
             var project = db.Projects.Find(projId);
 
-            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Name");
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Developer"), "Id", "Email");
             return View();
         }
 
         //POST: AddUserToProject
         [Authorize(Roles = "Admin, Manager")]
+        [HttpPost]
         public ActionResult AddUserToProject(string userId, int projId)
         {
             if (ModelState.IsValid)
             {
                 //var user = db.Users.Find(userId);
                 ProjectHelper.AssignUserToProject(userId, projId);
-                return RedirectToAction("Index", "Manage", new { projId });
+                return RedirectToAction("Index", "Manage", new { id = projId });
             }
 
-            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Name");
+            ViewBag.UserId = new SelectList(UserHelper.AllUsersInRole("Manager"), "Id", "Email");
             return View();
         }
 
