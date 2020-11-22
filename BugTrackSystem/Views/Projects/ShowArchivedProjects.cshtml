@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "ShowArchivedProjects";
+}
+
+<h2>Archived Projects</h2>
+
+<style>
+    .block {
+        width: 50%;
+        float: left;
+        display: inline;
+    }
+
+    table {
+        border-collapse: separate;
+        border: solid black 2px;
+        box-shadow: 5px 10px #888888;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-left: solid black 1px;
+        border-top: solid black 1px;
+    }
+
+    th {
+        border-top: none;
+    }
+
+        td:first-child, th:first-child {
+            border-left: none;
+        }
+
+    .floatleft {
+        width: 50%;
+        float: left;
+    }
+
+    .floatright {
+        width: 50%;
+        float: right;
+    }
+
+    .container {
+        overflow: hidden;
+    }
+</style>
+
+<div class="block">
+    <p>Current Projects: </p>
+
+    @foreach (var project in Model)
+    {
+        if (project.IsArchived == true)
+        {
+            <table style="width: 43%;border:groove;">
+                <tr>
+                    <th>Project: @project.Title</th>
+                </tr>
+                <tr>
+                    <td style="padding:15px;">@project.Description All projects have no description right now. This is a placeholder. </td>
+                </tr>
+                <tr>
+                    <td>
+                        Project Manager:
+                        @if (project.ApplicationUsers == null)
+                        {
+                            <span>"No Project Manager Assigned"</span>
+                        }
+                        else
+                        {
+                            foreach (var m in project.ApplicationUsers)
+                            {
+                                <span>
+                                    @m.Email |
+                                    @if (!m.Email.StartsWith("admin"))
+                                    {
+                                        @Html.ActionLink("Remove", "RemoveUserFromProject", "Projects", new { userId = m.Id, projId = project.Id }, null)
+                                    }
+                                </span>
+                            }
+                        }
+                    </td>
+                </tr>              
+            </table>
+            <br />
+        }
+    }
+</div>
+           
+<div>
+    @Html.ActionLink("Back to List", "Index", "Manage")
+</div>

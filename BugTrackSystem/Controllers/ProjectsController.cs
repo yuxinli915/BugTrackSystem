@@ -159,12 +159,18 @@ namespace BugTrackSystem.Controllers
             return RedirectToAction("Index", "Manage");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Manager")]
         public ActionResult ArchiveProject( int projId)
         {
             ProjectHelper.ArchiveProject(projId);
 
             return RedirectToAction("Index", "Manage");
+        }
+
+        public ActionResult ShowArchivedProjects()
+        {
+            var result = db.Projects.Where(p => p.IsArchived == true).ToList();
+            return View(result);
         }
     }
 }
