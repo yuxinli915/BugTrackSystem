@@ -84,5 +84,15 @@ namespace BugTrackSystem.Models
 
             return userManager.Users.Where(i => i.Roles.Any(j => j.RoleId == role.Id)).ToList();
         }
+
+        public static string GetRoleForUser(string userId)
+        {
+            var roleName = userManager.GetRoles(userId).FirstOrDefault();
+
+            return roleName;
+        }
+
+
+
     }
 }

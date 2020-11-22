@@ -1,0 +1,64 @@
+﻿@model BugTrackSystem.Models.RoleViewModel
+
+@{
+    ViewBag.Title = "RoleManagement";
+}
+
+<h2>Role Management</h2>
+
+<style>
+    .block {
+        width: 50%;
+        float: left;
+        display: inline;
+    }
+
+    table {
+        border-collapse: separate;
+        border: solid black 2px;
+        box-shadow: 5px 10px #888888;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-left: solid black 1px;
+        border-top: solid black 1px;
+    }
+
+    th {
+        border-top: none;
+    }
+
+        td:first-child, th:first-child {
+            border-left: none;
+        }
+
+    .floatleft {
+        width: 50%;
+        float: left;
+    }
+
+    .floatright {
+        width: 50%;
+        float: right;
+    }
+
+    .container {
+        overflow: hidden;
+    }
+</style>
+
+@foreach(var user in Model.Users)
+{
+<div style="border:solid 1px; width: 30%; padding: 15px; margin:12px;">
+    UserName: @user.UserName<br />
+    Role: @user.GetRoleName(user.Id)
+
+    @Html.ActionLink("Remove", "RemoveUserFromRole", "Manage", new { userId = user.Id, roleName = user.GetRoleName(user.Id) }, null)
+    @if(user.Roles == null)
+    {
+       <p> Add assign role page here</p>
+    }
+</div>
+}
