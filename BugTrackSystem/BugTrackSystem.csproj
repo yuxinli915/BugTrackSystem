@@ -384,6 +384,7 @@
     <Content Include="Views\Projects\ShowArchivedProjects.cshtml" />
     <Content Include="Views\Tickets\SearchResult.cshtml" />
     <Content Include="Views\Tickets\Search.cshtml" />
+    <Content Include="Views\Manage\ViewTickets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

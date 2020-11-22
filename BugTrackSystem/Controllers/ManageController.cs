@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTrackSystem.Models;
+using PagedList;
+
 
 namespace BugTrackSystem.Controllers
 {
@@ -342,6 +344,15 @@ namespace BugTrackSystem.Controllers
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+        }
+
+        public ActionResult ViewTickets(int? page)
+        {
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(db.Tickets.ToList().ToPagedList(pageNumber, pageSize));
+
         }
 
         protected override void Dispose(bool disposing)

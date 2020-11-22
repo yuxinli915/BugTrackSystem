@@ -27,8 +27,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>@Html.ActionLink("Home", "Index", "Manage")</li>
-                        <li>@Html.ActionLink("Project Management", "Project", "Manage")</li>
-                        <li>@Html.ActionLink("Ticket Management", "Ticket", "Manage")</li>
+                        <li>@Html.ActionLink("Ticket Management", "ViewTickets", "Manage")</li>
                         <li>@Html.ActionLink("Role Management", "Role", "Manage")</li>
                         <li>@Html.ActionLink("Search", "Search", "Tickets")</li>
                     </ul>
@@ -52,8 +51,6 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>@Html.ActionLink("Home", "Index", "Manage")</li>
-                        <li>@Html.ActionLink("Project Management", "Project", "Manage")</li>
-                        <li>@Html.ActionLink("Ticket Management", "Ticket", "Manage")</li>
                     </ul>
                     @Html.Partial("_LoginPartial")
                 </div>
@@ -75,7 +72,7 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("View Your Tickets", "Index", "Manage")</li>
+                        <li>@Html.ActionLink("Home", "Index", "Manage")</li>
                     </ul>
                     @Html.Partial("_LoginPartial")
                 </div>
