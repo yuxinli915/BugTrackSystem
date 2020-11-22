@@ -385,6 +385,7 @@
     <Content Include="Views\Tickets\SearchResult.cshtml" />
     <Content Include="Views\Tickets\Search.cshtml" />
     <Content Include="Views\Manage\ViewTickets.cshtml" />
+    <Content Include="Views\Manage\RoleManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
