@@ -5,7 +5,21 @@
 @{
     ViewBag.Title = "ViewTickets";
 }
+<div>
 
+    Sort By:
+    @Html.ActionLink("Title", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Owner", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Assignment", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Created", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Updated", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Type", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Priority", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Status", "SortList", new { param = "title" })&nbsp;|
+    @Html.ActionLink("Project", "SortList", new { param = "title" })&nbsp;|
+
+
+</div>
 All Tickets:
 @foreach (var ticket in Model)
 {

@@ -321,8 +321,10 @@ namespace BugTrackSystem.Controllers
         }
 
         //Sort ticket list by title, owner, assignment, creation or recent update date/time, ticket type, priority, status, and project
-        public async Task<ActionResult> SortList(string param)
+        public async Task<ActionResult> SortList(int? page,string param)
         {
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
@@ -369,8 +371,19 @@ namespace BugTrackSystem.Controllers
             {
                 model.Tickets = db.Tickets.OrderByDescending(t => t.Project.Id).ToList();
             }
+            
+            var result = model.Tickets.ToList().ToPagedList(pageNumber, pageSize);
 
-            return RedirectToAction("Index", "Manage");
+            return View("ViewTickets", result);
+
+            /*        public ActionResult ViewTickets(int? page)
+        {
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(db.Tickets.ToList().ToPagedList(pageNumber, pageSize));
+
+            */
         }
         //
         // GET: /Manage/ManageLogins
