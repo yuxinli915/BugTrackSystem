@@ -1,28 +1,9 @@
-﻿@model IEnumerable<BugTrackSystem.Models.Ticket>
+﻿
 @{
     ViewBag.Title = "Search Result";
 }
 
 <h2>Search Result</h2>
 
-<p>Most Recent Tickets:</p>
-@foreach (var ticket in Model)
-{
-    <table style="width: 43%;border:groove;">
-        <tr>
-            <th>Ticket: @ticket.Title</th>
-        </tr>
-        <tr>
-            <td style="padding:15px;">@ticket.Description Ticket description goes here</td>
-        </tr>
-        <tr>
-            <td>Assigned To: @((ticket.AssignedUserId == null) ? "Not Assigned" : @ticket.GetAssignedUserName(ticket.AssignedUserId))</td>
-        </tr>
-        <tr>
-            <th>@Html.ActionLink("Detail", "Detail", "Tickets", new { id = ticket.Id }, null)</th>
-        </tr>
-    </table>
-    <br />
 
-}
 

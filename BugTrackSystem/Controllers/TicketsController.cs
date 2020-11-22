@@ -8,7 +8,7 @@ using System.Data.Entity;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-
+using PagedList;
 namespace BugTrackSystem.Controllers
 {
     public class TicketsController : Controller
@@ -253,45 +253,51 @@ namespace BugTrackSystem.Controllers
             return View(ticket);
         }
 
-        public ActionResult Search()
+        public ActionResult Search(string option, string search, int? page)
         {
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
 
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Search(string option, string search)
-        {
+            ViewBag.option = option;
+            ViewBag.search = search;
 
             if (option == "Title")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.Title.Contains(search) || search == null).ToList());
+                var list = db.Tickets.Where(t => t.Title.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
             else if (option == "Description")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.Description.Contains(search) || search == null).ToList());
+               var list=db.Tickets.Where(t => t.Description.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
             else if (option == "Status")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.TicketStatus.Name.Contains(search) || search == null).ToList());
+                var list = db.Tickets.Where(t => t.TicketStatus.Name.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
             else if (option == "Priority")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.TicketProperty.Name.Contains(search) || search == null).ToList());
+                var list = db.Tickets.Where(t => t.TicketProperty.Name.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
             else if (option == "Type")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.TicketType.Name.Contains(search) || search == null).ToList());
+                var list = db.Tickets.Where(t => t.TicketType.Name.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
             else if (option == "User")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.Owner.Email.Contains(search) || t.AssignedUser.Email.Contains(search) || search == null).ToList());
+                var list = db.Tickets.Where(t => t.Owner.Email.Contains(search) || t.AssignedUser.Email.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
             else if (option == "Project")
             {
-                return View("SearchResult", db.Tickets.Where(t => t.Project.Title.Contains(search) || t.Project.Description.Contains(search) || search == null).ToList());
+                var list = db.Tickets.Where(t => t.Project.Title.Contains(search) || t.Project.Description.Contains(search) || search == null).ToList();
+                return View(list.ToPagedList(pageNumber, pageSize));
             }
-            else return View("SearchResult", new List<Ticket>());
+            else 
+            return View(new List<Ticket>().ToPagedList(pageNumber, pageSize));
         }
     }
 }
